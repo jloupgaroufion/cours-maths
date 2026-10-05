@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a35">
+  <title>Mon espace de maths — Cours, khôlles et révisions</title>
+  <style>
+    :root {
+      --fond: #f5f7fc;
+      --blanc: #ffffff;
+      --texte: #17213a;
+      --secondaire: #62708d;
+      --primaire: #5446d7;
+      --clair: #efedff;
+      --vert: #087e73;
+      --bordure: #e5e9f3;
+      --ombre: 0 12px 35px rgba(29, 39, 82, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--fond);
+      color: var(--texte);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                   BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    button { font: inherit; cursor: pointer; }
+    .top {
+      background: #101a35;
+      color: white;
+      padding: 22px max(22px, calc((100vw - 1120px)/2));
+    }
+    .brand { font-weight: 850; font-size: 1.18rem; letter-spacing: -.03em; }
+    .brand span { color: #81e4d9; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(131,119,255,.35), transparent 34%),
+        radial-gradient(circle at 10% 85%, rgba(70,221,207,.18), transparent 33%),
+        linear-gradient(120deg, #101a35, #273467);
+      color: white;
+      padding: 60px 22px 66px;
+    }
+    .hero-inner { max-width: 1120px; margin: auto; position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,.13);
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: .82rem;
+      letter-spacing: .03em;
+    }
+    h1 { font-size: clamp(2.3rem, 6vw, 4.1rem); line-height: 1.09; margin: 18px 0; letter-spacing: -.055em; max-width: 790px; }
+    .hero p { max-width: 700px; color: #d8def9; font-size: 1.05rem; }
+    .hero-art {
+      position: absolute; right: -90px; top: -90px; height: 130%; opacity: .11;
+      pointer-events: none;
+    }
+    .shell { max-width: 1120px; margin: -28px auto 60px; padding: 0 20px; position: relative; }
+    .dashboard {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 14px; margin-bottom: 20px;
+    }
+    .stat, .panel {
+      background: var(--blanc);
+      border: 1px solid var(--bordure);
+      border-radius: 18px;
+      box-shadow: var(--ombre);
+    }
+    .stat { padding: 18px 20px; }
+    .stat strong { display: block; color: var(--primaire); font-size: 1.55rem; line-height: 1.2; }
+    .stat span { color: var(--secondaire); font-size: .87rem; }
+    .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .sidebar { padding: 17px; position: sticky; top: 14px; }
+    .label { text-transform: uppercase; letter-spacing: .12em; font-size: .7rem; color: var(--secondaire); font-weight: 800; margin: 7px 9px 10px; }
+    .chapter {
+      width: 100%; display: block; text-align: left;
+      background: transparent; border: 0; color: var(--texte);
+      border-radius: 11px; padding: 12px; font-weight: 700; margin: 3px 0;
+    }
+    .chapter small { display: block; font-weight: 500; color: var(--secondaire); font-size: .76rem; }
+    .chapter:hover { background: #f3f3ff; }
+    .chapter.active { color: var(--primaire); background: var(--clair); }
+    .content { padding: 25px 29px; min-height: 540px; }
+    .content-head h2 { margin: 0 0 5px; font-size: 1.7rem; letter-spacing: -.035em; }
+    .muted { color: var(--secondaire); }
+    .tabs { display: flex; flex-wrap: wrap; gap: 7px; padding: 20px 0; border-bottom: 1px solid var(--bordure); }
+    .tab {
+      border: 1px solid var(--bordure); background: white; border-radius: 9px;
+      padding: 9px 12px; font-weight: 700; color: #505b76; font-size: .86rem;
+    }
+    .tab:hover { border-color: #c3bcff; }
+    .tab.active { background: var(--primaire); color: white; border-color: var(--primaire); }
+    .body { padding-top: 20px; }
+    .body h3 { font-size: 1.24rem; margin: 26px 0 9px; line-height: 1.3; }
+    .body h3:first-child { margin-top: 3px; }
+    .body h4 { margin: 16px 0 5px; }
+    .body p { margin: 9px 0 14px; }
+    .body ul, .body ol { padding-left: 23px; }
+    .body li { margin-bottom: 7px; }
+    .callout {
+      padding: 14px 17px; background: #f1f0ff;
+      border-left: 4px solid var(--primaire); border-radius: 10px;
+      margin: 17px 0;
+    }
+    .callout.green { background: #eaf8f5; border-color: #19a594; }
+    .math {
+      background: #f7f8fc; padding: 13px 15px; border-radius: 10px;
+      font-family: Georgia, serif; font-size: 1.13rem; overflow-x: auto;
+      margin: 15px 0;
+    }
+    .badge {
+      display: inline-block; border-radius: 100px; padding: 3px 9px;
+      background: #e9f7f4; color: var(--vert); font-size: .75rem;
+      font-weight: 800; margin: 0 5px 5px 0;
+    }
+    .badge.warn { color: #925d0e; background: #fff2d9; }
+    .exercise {
+      border: 1px solid var(--bordure); border-radius: 14px;
+      padding: 17px; margin: 18px 0;
+    }
+    .exercise h3 { margin: 0 0 8px; }
+    .action {
+      background: var(--primaire); color: #fff; border: 0;
+      border-radius: 9px; padding: 9px 13px; font-weight: 750;
+    }
+    .action.secondary { color: var(--primaire); background: var(--clair); }
+    .solution { margin-top: 15px; border-top: 1px solid var(--bordure); padding-top: 11px; }
+    .flashcard {
+      min-height: 230px; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center;
+      padding: 25px; border: 2px solid #dedaff; border-radius: 18px;
+      background: linear-gradient(140deg, #fcfbff, #f0efff);
+    }
+    .flashcard .overline { color: var(--primaire); font-weight: 800; font-size: .77rem; text-transform: uppercase; letter-spacing: .09em; }
+    .flashcard .face { font-size: 1.4rem; font-weight: 800; line-height: 1.4; margin-top: 15px; }
+    .flash-controls { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
+    .progress { color: var(--secondaire); font-size: .86rem; margin: 12px 0; }
+    .footer { max-width: 1120px; margin: 0 auto 35px; padding: 0 22px; color: var(--secondaire); font-size: .83rem; }
+    @media (max-width: 750px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .chapter { display: inline-block; width: auto; vertical-align: top; }
+      .chapter small { display: none; }
+      .content { padding: 20px 17px; }
+      .dashboard { gap: 8px; }
+      .stat { padding: 12px; }
+      .stat strong { font-size: 1.1rem; }
+      .stat span { font-size: .72rem; }
+      .hero { padding: 42px 20px 62px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="brand">✦ Mon espace <span>de maths</span></div></header>
+  <section class="hero">
+    <svg class="hero-art" viewBox="0 0 500 500" aria-hidden="true">
+      <circle cx="215" cy="245" r="126" fill="none" stroke="white" stroke-width="13"/>
+      <circle cx="350" cy="245" r="126" fill="none" stroke="white" stroke-width="13"/>
+      <path d="M75 390h330M245 65v370" fill="none" stroke="white" stroke-width="6"/>
+    </svg>
+    <div class="hero-inner">
+      <span class="eyebrow">TON ESPACE DE RÉVISION · VERSION 1</span>
+      <h1>Comprendre le cours.<br>Réussir les exercices.</h1>
+      <p>Un espace interactif pour avancer chapitre par chapitre, revoir les définitions,
+      suivre les démonstrations et t'entraîner aux khôlles et aux DS.</p>
+    </div>
+  </section>
+
+  <main class="shell">
+    <div class="dashboard">
+      <div class="stat"><strong>6</strong><span>modules au programme</span></div>
+      <div class="stat"><strong>1</strong><span>module commencé en détail</span></div>
+      <div class="stat"><strong id="review-count">0</strong><span>flashcards à revoir</span></div>
+    </div>
+    <div class="layout">
+      <aside class="sidebar panel" aria-label="Chapitres">
+        <div class="label">Mes chapitres</div>
+        <div id="chapters"></div>
+      </aside>
+      <section class="content panel" aria-live="polite">
+        <div class="content-head">
+          <h2 id="chapter-title"></h2>
+          <div id="chapter-subtitle" class="muted"></div>
+        </div>
+        <div class="tabs" id="tabs" aria-label="Rubriques"></div>
+        <div class="body" id="body"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer">
+    Les sujets de khôlle et de DS de cette version sont originaux : ce ne sont pas
+    les sujets de ton professeur. Le contenu sera complété avec tes feuilles.
+  </footer>
+
+<script>
+"use strict";
+
+const chapters = [
+  { id: "ensembles", name: "Ensembles", status: "Cours disponible",
+    detail: "Appartenance, inclusion, opérations, produit cartésien et parties." },
+  { id: "applications", name: "Applications", status: "À développer",
+    detail: "Images, composition, injection, surjection et bijection." },
+  { id: "relations", name: "Relations", status: "À développer",
+    detail: "Équivalences, classes, ordres et bornes." },
+  { id: "cardinalite", name: "Cardinalité", status: "À développer",
+    detail: "Ensembles finis, dénombrement et coefficients binomiaux." },
+  { id: "reels", name: "Réels", status: "À développer",
+    detail: "Valeur absolue, bornes, propriété archimédienne et densité." },
+  { id: "suites", name: "Suites", status: "À développer",
+    detail: "Limites, monotonie, suites extraites et convergence." }
+];
+
+const tabNames = [
+  ["cours", "📖 Cours"],
+  ["definitions", "📌 Définitions"],
+  ["proprietes", "✨ Propriétés"],
+  ["preuves", "🧩 Démonstrations"],
+  ["methodes", "🛠️ Méthodes"],
+  ["kholles", "🎙️ Khôlles"],
+  ["ds", "📝 DS"],
+  ["cartes", "🃏 Flashcards"]
+];
+
+const content = {
+  ensembles: {
+    cours: `
+      <span class="badge">Chapitre rédigé</span>
+      <span class="badge warn">À comparer avec tes feuilles</span>
+      <h3>1. Ensembles, éléments et inclusion</h3>
+      <p>Un <strong>ensemble</strong> est une collection d'objets appelés
+      <strong>éléments</strong>. Si x est un élément de A, on écrit
+      <strong>x ∈ A</strong>. Sinon, on écrit <strong>x ∉ A</strong>.</p>
+      <p>Dire que <strong>A ⊆ B</strong> signifie que tous les éléments de A
+      appartiennent également à B. Il faut bien distinguer l'appartenance
+      d'un objet à un ensemble et l'inclusion d'un ensemble dans un autre.</p>
+      <div class="callout"><strong>Exemple :</strong> si A = {1, 2, 3},
+      alors 2 ∈ A et {2} ⊆ A. En revanche, {2} ∈ A est faux :
+      les éléments affichés de A sont 1, 2 et 3.</div>
+      <p>L'ensemble vide, noté ∅, ne contient aucun élément. Il est inclus
+      dans tout ensemble : <strong>∅ ⊆ A</strong> pour tout A.</p>
+      <h3>2. Égalité et opérations ensemblistes</h3>
+      <p>Deux ensembles sont égaux lorsqu'ils ont exactement les mêmes éléments.
+      En pratique, on établit souvent <strong>A ⊆ B</strong>, puis
+      <strong>B ⊆ A</strong> : c'est la méthode de la double inclusion.</p>
+      <div class="math">A ∩ B = {x : x ∈ A et x ∈ B}<br>
+      A ∪ B = {x : x ∈ A ou x ∈ B}<br>
+      A ∖ B = {x : x ∈ A et x ∉ B}</div>
+      <p>Le « ou » de la réunion est <strong>inclusif</strong> :
+      un élément commun à A et B appartient lui aussi à A ∪ B.</p>
+      <div class="callout green"><strong>Exemple :</strong>
+      A = {1, 2, 3} et B = {3, 4}. Alors
+      A ∩ B = {3}, A ∪ B = {1, 2, 3, 4} et A ∖ B = {1, 2}.</div>
+      <p>Le complémentaire dépend de l'ensemble ambiant E :
+      le complémentaire de A dans E est <strong>E ∖ A</strong>.</p>
+      <h3>3. Produit cartésien et ensemble des parties</h3>
+      <p><strong>X × Y</strong> est l'ensemble des couples (x, y) tels que
+      x ∈ X et y ∈ Y. L'ordre des coordonnées compte généralement.</p>
+      <p><strong>𝒫(X)</strong> est l'ensemble de tous les sous-ensembles de X.
+      Si X = {a, b}, alors
+      𝒫(X) = {∅, {a}, {b}, {a, b}}.
+      Attention : ∅ ∈ 𝒫(X), parce que ∅ ⊆ X.</p>
+      <h3>4. Combien de fonctions de X vers Y ?</h3>
+      <p>Une fonction de X vers Y associe à chaque élément de X exactement
+      un élément de Y. Si X possède m éléments et Y en possède n,
+      le nombre de fonctions X → Y est <strong>n<sup>m</sup></strong> :
+      il y a n choix indépendants pour chacune des m entrées.</p>
+      <div class="callout"><strong>À retenir :</strong> si X a m éléments,
+      |𝒫(X)| = 2<sup>m</sup>. Si X a m éléments et Y en a n,
+      |X × Y| = mn.</div>
+    `,
+    definitions: `
+      <h3>Définitions précises</h3>
+      <p><strong>Inclusion :</strong> A ⊆ B signifie :
+      pour tout x, si x ∈ A, alors x ∈ B.</p>
+      <p><strong>Égalité :</strong> A = B signifie
+      A ⊆ B et B ⊆ A.</p>
+      <p><strong>Intersection :</strong> A ∩ B contient les éléments
+      appartenant simultanément à A et à B.</p>
+      <p><strong>Réunion :</strong> A ∪ B contient les éléments
+      appartenant à au moins un des ensembles A, B.</p>
+      <p><strong>Différence :</strong> A ∖ B contient les éléments
+      de A qui ne sont pas dans B.</p>
+      <p><strong>Produit cartésien :</strong> X × Y contient les couples
+      (x, y) avec x ∈ X et y ∈ Y.</p>
+      <p><strong>Ensemble des parties :</strong> 𝒫(X) est l'ensemble
+      de toutes les parties de X.</p>
+      <div class="callout"><strong>Point de vigilance :</strong>
+      x ∈ A et {x} ⊆ A ne sont pas la même écriture, même si
+      la première entraîne la seconde.</div>
+    `,
+    proprietes: `
+      <h3>Identités utiles</h3>
+      <div class="math">
+      A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)<br>
+      A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)<br>
+      E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B)<br>
+      E ∖ (A ∩ B) = (E ∖ A) ∪ (E ∖ B)
+      </div>
+      <p>Les deux dernières formules sont les <strong>lois de De Morgan</strong>.
+      Elles permettent de nier correctement un « ou » ou un « et ».</p>
+      <h3>Autres résultats</h3>
+      <p>∅ ⊆ A ; A ∩ ∅ = ∅ ; A ∪ ∅ = A ; A ∩ A = A ; A ∪ A = A.</p>
+      <p>Si X est fini et |X| = m, alors |𝒫(X)| = 2<sup>m</sup>.</p>
+      <div class="callout green"><strong>Interprétation :</strong>
+      pour construire une partie de X, chaque élément est soit sélectionné,
+      soit écarté. Cela donne deux choix pour chacun des m éléments.</div>
+    `,
+    preuves: `
+      <h3>Preuve 1 — Distributivité</h3>
+      <p>Montrons A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C).</p>
+      <ol>
+        <li>Choisissons un élément quelconque x.</li>
+        <li>x ∈ A ∩ (B ∪ C) signifie :
+        x ∈ A et (x ∈ B ou x ∈ C).</li>
+        <li>En distribuant « et » sur « ou », cela équivaut à :
+        (x ∈ A et x ∈ B) ou (x ∈ A et x ∈ C).</li>
+        <li>C'est exactement :
+        x ∈ (A ∩ B) ∪ (A ∩ C).</li>
+        <li>Les deux ensembles ont les mêmes éléments : ils sont égaux.</li>
+      </ol>
+      <h3>Preuve 2 — Loi de De Morgan</h3>
+      <p>Montrons E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B),
+      avec A et B inclus dans E.</p>
+      <ol>
+        <li>Soit x ∈ E.</li>
+        <li>x ∈ E ∖ (A ∪ B) équivaut à x ∉ A ∪ B.</li>
+        <li>Ne pas être dans une réunion signifie
+        x ∉ A <strong>et</strong> x ∉ B.</li>
+        <li>Autrement dit, x ∈ E ∖ A et x ∈ E ∖ B.</li>
+        <li>Donc x ∈ (E ∖ A) ∩ (E ∖ B).
+        Chaque étape étant réversible, les ensembles sont égaux.</li>
+      </ol>
+    `,
+    methodes: `
+      <h3>Montrer une inclusion A ⊆ B</h3>
+      <ol>
+        <li>Prendre un élément quelconque x ∈ A.</li>
+        <li>Utiliser les hypothèses pour montrer x ∈ B.</li>
+        <li>Conclure que tout élément de A appartient à B.</li>
+      </ol>
+      <h3>Montrer une égalité d'ensembles</h3>
+      <p>Soit effectuer une double inclusion, soit établir, pour tout x,
+      une chaîne d'équivalences entre « x appartient au premier ensemble »
+      et « x appartient au second ensemble ».</p>
+      <h3>Réfuter une égalité prétendue universelle</h3>
+      <p>Un seul contre-exemple suffit. Par exemple,
+      avec A = {1} et B = ∅, on a A ∪ B ≠ A ∩ B.</p>
+      <div class="callout"><strong>Piège récurrent :</strong>
+      vérifier un exemple où une formule marche ne suffit jamais
+      à démontrer qu'elle est vraie pour tous les ensembles.</div>
+    `,
+    kholles: `
+      <div class="exercise">
+        <h3>Khôlle originale n° 1</h3>
+        <p><strong>Questions :</strong> 1. Définir A ⊆ B et prouver ∅ ⊆ A.
+        2. Montrer E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B).
+        3. Pour X = {a, b, c}, donner toutes les parties de X.</p>
+        <button class="action" type="button" onclick="toggleSolution(this)">
+          Voir le corrigé
+        </button>
+        <div class="solution" hidden>
+          <p><strong>1.</strong> A ⊆ B signifie que tout élément de A est
+          dans B. Comme ∅ n'a aucun élément pouvant contredire cette
+          affirmation, ∅ ⊆ A.</p>
+          <p><strong>2.</strong> Pour x ∈ E :
+          x ∈ E ∖ (A ∪ B) ⇔ x ∉ A ∪ B
+          ⇔ (x ∉ A et x ∉ B)
+          ⇔ x ∈ (E ∖ A) ∩ (E ∖ B).
+          Les deux ensembles sont donc égaux.</p>
+          <p><strong>3.</strong> 𝒫(X) =
+          {∅, {a}, {b}, {c}, {a, b}, {a, c},
+          {b, c}, {a, b, c}}. Il y a 2³ = 8 parties.</p>
+        </div>
+      </div>
+      <p class="muted">Sujet d'entraînement créé pour cette application ;
+      il ne provient pas de ton enseignant.</p>
+    `,
+    ds: `
+      <div class="exercise">
+        <h3>Mini-DS original n° 1 — différence symétrique</h3>
+        <p>Soient A, B ⊆ E et
+        D = (A ∖ B) ∪ (B ∖ A).</p>
+        <ol>
+          <li>Décrire les éléments de D.</li>
+          <li>Prouver D = (A ∪ B) ∖ (A ∩ B).</li>
+          <li>Calculer D si A = {1,2,3,4} et B = {3,4,5}.</li>
+          <li>À quelle condition D = A ∪ B ?</li>
+        </ol>
+        <button class="action" type="button" onclick="toggleSolution(this)">
+          Voir le corrigé complet
+        </button>
+        <div class="solution" hidden>
+          <p><strong>1.</strong> D contient les éléments qui appartiennent
+          à exactement un des deux ensembles A et B.</p>
+          <p><strong>2.</strong> Soit x. On a
+          x ∈ D ⇔ [(x ∈ A et x ∉ B) ou
+          (x ∈ B et x ∉ A)].
+          Cela équivaut à « x appartient à A ou B, mais pas
+          aux deux » ; donc
+          x ∈ (A ∪ B) ∖ (A ∩ B).
+          Les ensembles ont ainsi les mêmes éléments.</p>
+          <p><strong>3.</strong> A ∖ B = {1,2} et
+          B ∖ A = {5}. Donc D = {1,2,5}.</p>
+          <p><strong>4.</strong> D = A ∪ B exactement lorsque rien
+          n'est retiré de A ∪ B, c'est-à-dire lorsque
+          A ∩ B = ∅. Les ensembles doivent être disjoints.</p>
+        </div>
+      </div>
+      <p class="muted">Mini-DS d'entraînement créé pour cette application ;
+      il ne provient pas de ton établissement.</p>
+    `
+  }
+};
+
+const cards = [
+  ["Que signifie A ⊆ B ?", "Tout élément de A appartient aussi à B."],
+  ["Comment prouver A = B ?", "Prouver A ⊆ B puis B ⊆ A."],
+  ["Quelle différence entre x ∈ A et {x} ⊆ A ?",
+   "La première concerne un élément ; la seconde concerne un ensemble. Si x ∈ A, alors {x} ⊆ A."],
+  ["∅ ∈ 𝒫(X) : vrai ou faux ?", "Vrai, car ∅ ⊆ X."],
+  ["Que contient A ∩ B ?", "Les éléments appartenant à A et à B."],
+  ["Que contient A ∪ B ?", "Les éléments appartenant à A ou à B, éventuellement aux deux."],
+  ["Si |X| = 3, combien de parties possède X ?", "2³ = 8 parties."],
+  ["Complémentaire d'une réunion ?",
+   "E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B)."]
+];
+
+let currentChapter = "ensembles";
+let currentTab = "cours";
+let cardIndex = 0;
+let cardRevealed = false;
+let needsReview = new Set();
+
+try {
+  const saved = JSON.parse(localStorage.getItem("maths-review-v1") || "[]");
+  if (Array.isArray(saved)) {
+    needsReview = new Set(saved.filter(n => Number.isInteger(n) && n >= 0 && n < cards.length));
+  }
+} catch (_) { /* Le site reste utilisable si le stockage est bloqué. */ }
+
+function saveReview() {
+  try {
+    localStorage.setItem("maths-review-v1", JSON.stringify([...needsReview]));
+  } catch (_) {}
+  document.getElementById("review-count").textContent = needsReview.size;
+}
+
+function renderChapters() {
+  document.getElementById("chapters").innerHTML = chapters.map(c =>
+    `<button type="button" class="chapter ${c.id === currentChapter ? "active" : ""}"
+      data-id="${c.id}" aria-current="${c.id === currentChapter ? "page" : "false"}">
+      ${c.name}<small>${c.status}</small>
+    </button>`
+  ).join("");
+  document.querySelectorAll(".chapter").forEach(button => {
+    button.addEventListener("click", () => {
+      currentChapter = button.dataset.id;
+      currentTab = "cours";
+      render();
+    });
+  });
+}
+
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = tabNames.map(([id, label]) =>
+    `<button type="button" class="tab ${id === currentTab ? "active" : ""}"
+       data-tab="${id}" aria-pressed="${id === currentTab}">${label}</button>`
+  ).join("");
+  document.querySelectorAll(".tab").forEach(button => {
+    button.addEventListener("click", () => {
+      currentTab = button.dataset.tab;
+      renderTabs();
+      renderBody();
+    });
+  });
+}
+
+function renderBody() {
+  const area = document.getElementById("body");
+  if (currentChapter !== "ensembles") {
+    area.innerHTML = `
+      <span class="badge warn">En attente de tes feuilles</span>
+      <h3>${chapters.find(c => c.id === currentChapter).name}</h3>
+      <p>Ce module figure dans le parcours repéré sur tes sommaires,
+      mais il n'est pas encore rédigé dans cette première version.
+      Je préfère ne pas inventer les démonstrations ou les sujets
+      de ton professeur.</p>
+      <div class="callout">
+        <strong>Prochaine mise à jour :</strong> envoie les pages de ce
+        chapitre dans notre conversation. Je pourrai rédiger le cours,
+        les définitions, les preuves et les exercices ici, puis te donner
+        une version mise à jour du site.
+      </div>`;
+    return;
+  }
+  if (currentTab === "cartes") {
+    renderCard();
+    return;
+  }
+  area.innerHTML = content.ensembles[currentTab] || "<p>Contenu à venir.</p>";
+}
+
+function renderCard() {
+  const area = document.getElementById("body");
+  const card = cards[cardIndex];
+  area.innerHTML = `
+    <h3>S'entraîner par rappel actif</h3>
+    <p>Essaie de répondre <strong>avant</strong> de retourner la carte.</p>
+    <div class="progress">Carte ${cardIndex + 1} sur ${cards.length}
+      · ${needsReview.size} à revoir</div>
+    <div class="flashcard">
+      <div class="overline">${cardRevealed ? "Réponse" : "Question"}</div>
+      <div class="face" id="face"></div>
+    </div>
+    <div class="flash-controls">
+      <button class="action" id="flip" type="button">
+        ${cardRevealed ? "Revoir la question" : "Afficher la réponse"}
+      </button>
+      <button class="action secondary" id="again" type="button">
+        À revoir
+      </button>
+      <button class="action secondary" id="known" type="button">
+        Je la connais
+      </button>
+      <button class="action secondary" id="next" type="button">
+        Carte suivante →
+      </button>
+    </div>
+    <div class="callout green">Ton choix « À revoir » ou « Je la connais »
+    est enregistré dans ce navigateur. Il ne se synchronise pas
+    automatiquement avec d'autres appareils.</div>`;
+  document.getElementById("face").textContent = card[cardRevealed ? 1 : 0];
+  document.getElementById("flip").onclick = () => {
+    cardRevealed = !cardRevealed;
+    renderCard();
+  };
+  document.getElementById("again").onclick = () => {
+    needsReview.add(cardIndex);
+    saveReview();
+    nextCard();
+  };
+  document.getElementById("known").onclick = () => {
+    needsReview.delete(cardIndex);
+    saveReview();
+    nextCard();
+  };
+  document.getElementById("next").onclick = nextCard;
+}
+
+function nextCard() {
+  cardIndex = (cardIndex + 1) % cards.length;
+  cardRevealed = false;
+  renderCard();
+}
+
+function toggleSolution(button) {
+  const solution = button.nextElementSibling;
+  solution.hidden = !solution.hidden;
+  button.textContent = solution.hidden ? "Voir le corrigé" : "Masquer le corrigé";
+}
+
+function render() {
+  const chapter = chapters.find(c => c.id === currentChapter);
+  document.getElementById("chapter-title").textContent = chapter.name;
+  document.getElementById("chapter-subtitle").textContent = chapter.detail;
+  renderChapters();
+  renderTabs();
+  renderBody();
+}
+
+saveReview();
+render();
+</script>
+</body>
+</html>
