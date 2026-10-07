@@ -1,580 +1,673 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101a35">
-  <title>Mon espace de maths — Cours, khôlles et révisions</title>
-  <style>
-    :root {
-      --fond: #f5f7fc;
-      --blanc: #ffffff;
-      --texte: #17213a;
-      --secondaire: #62708d;
-      --primaire: #5446d7;
-      --clair: #efedff;
-      --vert: #087e73;
-      --bordure: #e5e9f3;
-      --ombre: 0 12px 35px rgba(29, 39, 82, .08);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--fond);
-      color: var(--texte);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-                   BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.7;
-    }
-    button { font: inherit; cursor: pointer; }
-    .top {
-      background: #101a35;
-      color: white;
-      padding: 22px max(22px, calc((100vw - 1120px)/2));
-    }
-    .brand { font-weight: 850; font-size: 1.18rem; letter-spacing: -.03em; }
-    .brand span { color: #81e4d9; }
-    .hero {
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 85% 20%, rgba(131,119,255,.35), transparent 34%),
-        radial-gradient(circle at 10% 85%, rgba(70,221,207,.18), transparent 33%),
-        linear-gradient(120deg, #101a35, #273467);
-      color: white;
-      padding: 60px 22px 66px;
-    }
-    .hero-inner { max-width: 1120px; margin: auto; position: relative; z-index: 1; }
-    .eyebrow {
-      display: inline-block;
-      background: rgba(255,255,255,.13);
-      padding: 6px 12px;
-      border-radius: 100px;
-      font-size: .82rem;
-      letter-spacing: .03em;
-    }
-    h1 { font-size: clamp(2.3rem, 6vw, 4.1rem); line-height: 1.09; margin: 18px 0; letter-spacing: -.055em; max-width: 790px; }
-    .hero p { max-width: 700px; color: #d8def9; font-size: 1.05rem; }
-    .hero-art {
-      position: absolute; right: -90px; top: -90px; height: 130%; opacity: .11;
-      pointer-events: none;
-    }
-    .shell { max-width: 1120px; margin: -28px auto 60px; padding: 0 20px; position: relative; }
-    .dashboard {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 14px; margin-bottom: 20px;
-    }
-    .stat, .panel {
-      background: var(--blanc);
-      border: 1px solid var(--bordure);
-      border-radius: 18px;
-      box-shadow: var(--ombre);
-    }
-    .stat { padding: 18px 20px; }
-    .stat strong { display: block; color: var(--primaire); font-size: 1.55rem; line-height: 1.2; }
-    .stat span { color: var(--secondaire); font-size: .87rem; }
-    .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 20px; align-items: start; }
-    .sidebar { padding: 17px; position: sticky; top: 14px; }
-    .label { text-transform: uppercase; letter-spacing: .12em; font-size: .7rem; color: var(--secondaire); font-weight: 800; margin: 7px 9px 10px; }
-    .chapter {
-      width: 100%; display: block; text-align: left;
-      background: transparent; border: 0; color: var(--texte);
-      border-radius: 11px; padding: 12px; font-weight: 700; margin: 3px 0;
-    }
-    .chapter small { display: block; font-weight: 500; color: var(--secondaire); font-size: .76rem; }
-    .chapter:hover { background: #f3f3ff; }
-    .chapter.active { color: var(--primaire); background: var(--clair); }
-    .content { padding: 25px 29px; min-height: 540px; }
-    .content-head h2 { margin: 0 0 5px; font-size: 1.7rem; letter-spacing: -.035em; }
-    .muted { color: var(--secondaire); }
-    .tabs { display: flex; flex-wrap: wrap; gap: 7px; padding: 20px 0; border-bottom: 1px solid var(--bordure); }
-    .tab {
-      border: 1px solid var(--bordure); background: white; border-radius: 9px;
-      padding: 9px 12px; font-weight: 700; color: #505b76; font-size: .86rem;
-    }
-    .tab:hover { border-color: #c3bcff; }
-    .tab.active { background: var(--primaire); color: white; border-color: var(--primaire); }
-    .body { padding-top: 20px; }
-    .body h3 { font-size: 1.24rem; margin: 26px 0 9px; line-height: 1.3; }
-    .body h3:first-child { margin-top: 3px; }
-    .body h4 { margin: 16px 0 5px; }
-    .body p { margin: 9px 0 14px; }
-    .body ul, .body ol { padding-left: 23px; }
-    .body li { margin-bottom: 7px; }
-    .callout {
-      padding: 14px 17px; background: #f1f0ff;
-      border-left: 4px solid var(--primaire); border-radius: 10px;
-      margin: 17px 0;
-    }
-    .callout.green { background: #eaf8f5; border-color: #19a594; }
-    .math {
-      background: #f7f8fc; padding: 13px 15px; border-radius: 10px;
-      font-family: Georgia, serif; font-size: 1.13rem; overflow-x: auto;
-      margin: 15px 0;
-    }
-    .badge {
-      display: inline-block; border-radius: 100px; padding: 3px 9px;
-      background: #e9f7f4; color: var(--vert); font-size: .75rem;
-      font-weight: 800; margin: 0 5px 5px 0;
-    }
-    .badge.warn { color: #925d0e; background: #fff2d9; }
-    .exercise {
-      border: 1px solid var(--bordure); border-radius: 14px;
-      padding: 17px; margin: 18px 0;
-    }
-    .exercise h3 { margin: 0 0 8px; }
-    .action {
-      background: var(--primaire); color: #fff; border: 0;
-      border-radius: 9px; padding: 9px 13px; font-weight: 750;
-    }
-    .action.secondary { color: var(--primaire); background: var(--clair); }
-    .solution { margin-top: 15px; border-top: 1px solid var(--bordure); padding-top: 11px; }
-    .flashcard {
-      min-height: 230px; display: flex; align-items: center; justify-content: center;
-      flex-direction: column; text-align: center;
-      padding: 25px; border: 2px solid #dedaff; border-radius: 18px;
-      background: linear-gradient(140deg, #fcfbff, #f0efff);
-    }
-    .flashcard .overline { color: var(--primaire); font-weight: 800; font-size: .77rem; text-transform: uppercase; letter-spacing: .09em; }
-    .flashcard .face { font-size: 1.4rem; font-weight: 800; line-height: 1.4; margin-top: 15px; }
-    .flash-controls { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
-    .progress { color: var(--secondaire); font-size: .86rem; margin: 12px 0; }
-    .footer { max-width: 1120px; margin: 0 auto 35px; padding: 0 22px; color: var(--secondaire); font-size: .83rem; }
-    @media (max-width: 750px) {
-      .layout { grid-template-columns: 1fr; }
-      .sidebar { position: static; }
-      .chapter { display: inline-block; width: auto; vertical-align: top; }
-      .chapter small { display: none; }
-      .content { padding: 20px 17px; }
-      .dashboard { gap: 8px; }
-      .stat { padding: 12px; }
-      .stat strong { font-size: 1.1rem; }
-      .stat span { font-size: .72rem; }
-      .hero { padding: 42px 20px 62px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier MPSI — cours, khôlles et DS</title>
+<style>
+:root{
+  --bg:#f3f5fa;--paper:#fff;--ink:#17243a;--sub:#53647c;
+  --line:#dce3ed;--blue:#3155b8;--pale:#eaf0ff;
+  --green:#08745d;--amber:#a25908;--shadow:0 9px 28px #1624420d
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit}a{color:var(--blue)}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #18a986;outline-offset:3px}
+.shell{display:grid;grid-template-columns:265px minmax(0,1fr);min-height:100vh}
+aside{background:var(--paper);border-right:1px solid var(--line);padding:20px 13px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-size:1.27rem;font-weight:850;margin:0 10px 3px}
+.brand span{color:var(--blue)}
+.micro{font-size:.78rem;color:var(--sub);margin:0 10px 16px}
+.group-label{margin:17px 10px 5px;color:var(--sub);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+nav button{display:block;width:100%;padding:8px 10px;text-align:left;background:transparent;border:0;border-radius:9px;color:var(--ink);cursor:pointer}
+nav button:hover,nav button[aria-current=page]{background:var(--pale);color:var(--blue)}
+nav button[aria-current=page]{font-weight:800}
+main{width:100%;max-width:1120px;margin:auto;padding:27px clamp(16px,4vw,46px) 90px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.top small{font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.1em}
+.action{background:var(--paper);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:7px 10px;cursor:pointer}
+.hero{padding:25px 28px;margin:17px 0 24px;border-radius:17px;background:linear-gradient(125deg,#213879,#5277d2);color:#fff}
+.hero h1{font-size:clamp(1.7rem,4vw,2.7rem);margin:0 0 5px;line-height:1.17}
+.hero p{margin:0;max-width:770px;color:#edf2ff}
+.page{display:none}.page.active{display:block}
+h2{font-size:1.75rem;line-height:1.2;margin:27px 0 9px}
+h3{font-size:1.25rem;margin:25px 0 8px}
+h4{margin:16px 0 5px}
+p{margin:8px 0 13px}
+.lead{font-size:1.06rem;color:var(--sub)}
+.card,.box,.exercise{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px 19px;margin:14px 0;box-shadow:var(--shadow)}
+.box{border-left:4px solid var(--blue)}
+.box.warn{border-left-color:var(--amber)}
+.box.good{border-left-color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.grid>.card{margin:0}
+.math,.formula{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.09em}
+.formula{display:block;background:var(--bg);padding:9px 12px;margin:8px 0;border-radius:8px;overflow-x:auto;white-space:nowrap}
+ul,ol{padding-left:1.45rem}li{margin:4px 0}
+details{margin:9px 0;border:1px solid var(--line);border-radius:9px;background:var(--paper);overflow:hidden}
+summary{cursor:pointer;padding:11px 13px;font-weight:750}
+.answer{border-top:1px solid var(--line);padding:8px 14px 14px}
+.exercise details{background:var(--bg)}
+.exercise h3{margin:2px 0 7px}
+.pill{display:inline-block;background:var(--pale);color:var(--blue);border-radius:999px;padding:2px 9px;font-size:.77rem;font-weight:800;margin:0 6px 8px 0}
+.hard{color:var(--amber)}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:15px 0}
+.toolbar input{flex:1;min-width:200px;max-width:430px;padding:8px 10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:9px}
+.filter[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.muted{color:var(--sub);font-size:.87rem}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.jump button{cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:7px 10px;border-radius:8px}
+.chapter-index{background:var(--paper);padding:12px 18px;border:1px solid var(--line);border-radius:10px;margin:14px 0}
+.chapter-index a{margin:0 13px 4px 0;display:inline-block}
+.subtopic{scroll-margin-top:15px}
+@media(max-width:760px){
+  .shell{display:block}aside{position:static;height:auto;padding:10px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand,.micro,.group-label{display:none}nav{display:flex;overflow-x:auto;gap:4px}nav button{white-space:nowrap;width:auto}
+  main{padding-top:14px}.hero{padding:19px}
+}
+@media print{
+  body{background:#fff;color:#000}
+  aside,.top,.toolbar{display:none!important}.shell{display:block}main{max-width:none;padding:0}
+  .page{display:block!important}.hero{background:#fff;color:#000;border:1px solid #777}
+  .hero p{color:#000}.card,.box,.exercise,details{box-shadow:none;break-inside:avoid}
+  details:not([open])>.answer{display:block!important}
+}
+</style>
 </head>
 <body>
-  <header class="top"><div class="brand">✦ Mon espace <span>de maths</span></div></header>
-  <section class="hero">
-    <svg class="hero-art" viewBox="0 0 500 500" aria-hidden="true">
-      <circle cx="215" cy="245" r="126" fill="none" stroke="white" stroke-width="13"/>
-      <circle cx="350" cy="245" r="126" fill="none" stroke="white" stroke-width="13"/>
-      <path d="M75 390h330M245 65v370" fill="none" stroke="white" stroke-width="6"/>
-    </svg>
-    <div class="hero-inner">
-      <span class="eyebrow">TON ESPACE DE RÉVISION · VERSION 1</span>
-      <h1>Comprendre le cours.<br>Réussir les exercices.</h1>
-      <p>Un espace interactif pour avancer chapitre par chapitre, revoir les définitions,
-      suivre les démonstrations et t'entraîner aux khôlles et aux DS.</p>
-    </div>
-  </section>
-
-  <main class="shell">
-    <div class="dashboard">
-      <div class="stat"><strong>6</strong><span>modules au programme</span></div>
-      <div class="stat"><strong>1</strong><span>module commencé en détail</span></div>
-      <div class="stat"><strong id="review-count">0</strong><span>flashcards à revoir</span></div>
-    </div>
-    <div class="layout">
-      <aside class="sidebar panel" aria-label="Chapitres">
-        <div class="label">Mes chapitres</div>
-        <div id="chapters"></div>
-      </aside>
-      <section class="content panel" aria-live="polite">
-        <div class="content-head">
-          <h2 id="chapter-title"></h2>
-          <div id="chapter-subtitle" class="muted"></div>
-        </div>
-        <div class="tabs" id="tabs" aria-label="Rubriques"></div>
-        <div class="body" id="body"></div>
-      </section>
-    </div>
-  </main>
-  <footer class="footer">
-    Les sujets de khôlle et de DS de cette version sont originaux : ce ne sont pas
-    les sujets de ton professeur. Le contenu sera complété avec tes feuilles.
-  </footer>
-
+<div class="shell">
+<aside>
+  <div class="brand">Atelier<span>·</span>MPSI</div>
+  <p class="micro">Cours détaillé · khôlles · DS</p>
+  <nav id="nav" aria-label="Navigation principale"></nav>
+</aside>
+<main id="main" tabindex="-1">
+  <div class="top">
+    <small>Mathématiques — fondements et analyse</small>
+    <button class="action" type="button" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+  <div class="hero">
+    <h1 id="hero-title">Un chapitre à la fois.</h1>
+    <p id="hero-subtitle">Un cours structuré, des preuves et un entraînement exigeant mais progressif.</p>
+  </div>
+  <div id="pages"></div>
+</main>
+</div>
 <script>
 "use strict";
 
-const chapters = [
-  { id: "ensembles", name: "Ensembles", status: "Cours disponible",
-    detail: "Appartenance, inclusion, opérations, produit cartésien et parties." },
-  { id: "applications", name: "Applications", status: "À développer",
-    detail: "Images, composition, injection, surjection et bijection." },
-  { id: "relations", name: "Relations", status: "À développer",
-    detail: "Équivalences, classes, ordres et bornes." },
-  { id: "cardinalite", name: "Cardinalité", status: "À développer",
-    detail: "Ensembles finis, dénombrement et coefficients binomiaux." },
-  { id: "reels", name: "Réels", status: "À développer",
-    detail: "Valeur absolue, bornes, propriété archimédienne et densité." },
-  { id: "suites", name: "Suites", status: "À développer",
-    detail: "Limites, monotonie, suites extraites et convergence." }
+/*
+  Chaque chapitre est indépendant. Les énoncés et corrections sont
+  conservés dans deux banques distinctes et filtrables par chapitre.
+  Aucun CDN ni bibliothèque externe.
+*/
+const chapters=[
+{
+ id:"logique", title:"Logique et ensembles", icon:"01",
+ subtitle:"Quantificateurs, opérations ensemblistes, produits et applications.",
+ blocks:[
+ ["Quantificateurs et raisonnement",`
+ <p>Une proposition comportant <span class="math">∀x∈E</span> affirme quelque chose pour <em>tout</em> élément de <span class="math">E</span>. La proposition <span class="math">∃x∈E</span> demande au moins un témoin. L'ordre des quantificateurs importe : <span class="math">∀x∃y</span> n'est pas, en général, équivalent à <span class="math">∃y∀x</span>.</p>
+ <div class="formula">¬(∀x∈E, P(x)) ⇔ ∃x∈E, ¬P(x) ; &nbsp; ¬(∃x∈E, P(x)) ⇔ ∀x∈E, ¬P(x).</div>
+ <p>Pour prouver <span class="math">P⇒Q</span>, on suppose <span class="math">P</span> et on démontre <span class="math">Q</span>. Par contraposée, on prouve <span class="math">¬Q⇒¬P</span>. Pour réfuter un énoncé universel, un contre-exemple suffit ; pour prouver une équivalence, on établit les deux implications.</p>
+ <p>Une preuve par récurrence comporte une initialisation à un rang précis et une hérédité : supposer <span class="math">P(n)</span>, démontrer <span class="math">P(n+1)</span>.</p>`],
+ ["Ensembles et opérations",`
+ <p><span class="math">A⊆B</span> signifie <span class="math">∀x, x∈A⇒x∈B</span>. Pour démontrer <span class="math">A=B</span>, montrer les deux inclusions. L'union contient les éléments présents dans au moins l'un des ensembles ; l'intersection ceux présents dans les deux.</p>
+ <div class="formula">A∩(B∪C)=(A∩B)∪(A∩C) ; &nbsp; A∪(B∩C)=(A∪B)∩(A∪C).</div>
+ <p>Dans un univers <span class="math">E</span>, le complémentaire de <span class="math">A</span> est <span class="math">E∖A</span>. Les lois de De Morgan donnent <span class="math">E∖(A∪B)=(E∖A)∩(E∖B)</span> et <span class="math">E∖(A∩B)=(E∖A)∪(E∖B)</span>.</p>
+ <p><span class="math">A×B={(a,b):a∈A,b∈B}</span> est un ensemble de <em>couples ordonnés</em>. En général, <span class="math">(a,b)≠(b,a)</span>. L'ensemble des parties de <span class="math">E</span> est noté <span class="math">𝒫(E)</span>.</p>`],
+ ["Applications",`
+ <p>Une application <span class="math">f:E→F</span> associe à chaque élément de <span class="math">E</span> une unique image dans <span class="math">F</span>. <strong>Injective :</strong> <span class="math">f(x)=f(y)⇒x=y</span>. <strong>Surjective :</strong> chaque élément de <span class="math">F</span> possède au moins un antécédent. <strong>Bijective :</strong> injective et surjective ; elle admet une application réciproque <span class="math">f⁻¹:F→E</span>.</p>
+ <p>Pour <span class="math">A⊆E</span>, l'image directe est <span class="math">f(A)={f(x):x∈A}</span>. Pour <span class="math">B⊆F</span>, l'image réciproque <span class="math">f⁻¹(B)={x∈E:f(x)∈B}</span> existe <em>même si f n'est pas bijective</em> : ne pas confondre image réciproque d'un ensemble et application réciproque.</p>
+ <div class="formula">f⁻¹(B∪C)=f⁻¹(B)∪f⁻¹(C) ; &nbsp; f⁻¹(B∩C)=f⁻¹(B)∩f⁻¹(C).</div>`],
+ ["Ensembles finis",`
+ <p>Le cardinal <span class="math">|E|</span> compte les éléments d'un ensemble fini. Si <span class="math">A∩B=∅</span>, <span class="math">|A∪B|=|A|+|B|</span>. En général, <span class="math">|A∪B|=|A|+|B|−|A∩B|</span>. Si <span class="math">|A|=p</span> et <span class="math">|B|=q</span>, alors <span class="math">|A×B|=pq</span> et <span class="math">|𝒫(A)|=2ᵖ</span>.</p>
+ <p>Entre deux ensembles finis de même cardinal, une application injective est automatiquement surjective, et réciproquement. Ce résultat ne s'étend pas tel quel aux ensembles infinis : <span class="math">n↦n+1</span> est une injection de <span class="math">ℕ</span> dans lui-même qui n'est pas surjective si <span class="math">0∈ℕ</span>.</p>`]
+]},
+{
+ id:"denombrement",title:"Dénombrement",icon:"02",
+ subtitle:"Principe multiplicatif, arrangements, permutations, combinaisons.",
+ blocks:[
+ ["Reconnaître l'objet à compter",`
+ <p>Commencer par décider si <strong>l'ordre compte</strong> et si <strong>les répétitions sont permises</strong>. Si une construction comporte <span class="math">r</span> étapes avec respectivement <span class="math">a₁,…,aᵣ</span> choix pour chaque branche, le nombre total est <span class="math">a₁···aᵣ</span>. Pour des cas <em>disjoints</em>, les effectifs s'additionnent.</p>
+ <div class="grid"><div class="card"><strong>Ordre oui, répétition oui</strong><span class="formula">nᵏ</span>Listes de longueur k prises dans n symboles.</div><div class="card"><strong>Ordre oui, répétition non</strong><span class="formula">n!/(n−k)!</span>Arrangements de k éléments distincts parmi n.</div><div class="card"><strong>Ordre non, répétition non</strong><span class="formula">C(n,k)=n!/[k!(n−k)!]</span>Choix d'une partie à k éléments.</div></div>
+ <p>Ces deux dernières formules exigent <span class="math">0≤k≤n</span>. Par convention <span class="math">0!=1</span>. Si tous les éléments sont rangés, il y a <span class="math">n!</span> permutations.</p>`],
+ ["Preuves des formules",`
+ <p>Un arrangement choisit successivement parmi <span class="math">n,n−1,…,n−k+1</span> possibilités. Donc <span class="math">A(n,k)=n!/(n−k)!</span>. Chaque partie à <span class="math">k</span> éléments apparaît dans les arrangements exactement <span class="math">k!</span> fois, ce qui démontre <span class="math">C(n,k)=A(n,k)/k!</span>.</p>
+ <p>Si des lettres indistinguables apparaissent avec multiplicités <span class="math">m₁,…,mᵣ</span> et total <span class="math">n</span>, le nombre de mots différents est <span class="math">n!/(m₁!···mᵣ!)</span>. Cette formule suppose que les lettres de groupes différents sont distinctes.</p>`],
+ ["Coefficients binomiaux",`
+ <div class="formula">C(n,k)=C(n,n−k) ; &nbsp; C(n+1,k)=C(n,k)+C(n,k−1).</div>
+ <p>La symétrie se prouve par complémentation. Pour Pascal, on fixe un élément : soit il appartient à la partie choisie, soit non. Avec <span class="math">C(n,k)=0</span> en dehors de <span class="math">0≤k≤n</span> :</p>
+ <div class="formula">(a+b)ⁿ = Σ(k=0…n) C(n,k)aⁿ⁻ᵏbᵏ ; &nbsp; Σ(k=0…n)C(n,k)=2ⁿ.</div>
+ <p>Cette dernière égalité compte aussi les parties d'un ensemble à <span class="math">n</span> éléments : chaque élément est inclus ou exclu.</p>`],
+ ["Méthodes de dénombrement",`
+ <p><strong>Par complémentaire :</strong> compter toutes les configurations puis enlever celles interdites. <strong>Par partition :</strong> couper en cas disjoints et exhaustifs. <strong>Par bijection :</strong> transformer les objets en un ensemble plus facile à compter. <strong>Double comptage :</strong> compter le même ensemble de couples de deux façons.</p>
+ <p><strong>Tiroirs :</strong> répartir <span class="math">N</span> objets dans <span class="math">m≥1</span> boîtes force au moins une boîte à contenir <span class="math">⌈N/m⌉</span> objets. Si <span class="math">|E|=p</span> et <span class="math">|F|=q</span>, il existe <span class="math">qᵖ</span> applications <span class="math">E→F</span> ; pour <span class="math">p≤q</span>, <span class="math">q!/(q−p)!</span> sont injectives.</p>
+ <div class="box warn"><strong>Question systématique :</strong> deux constructions différentes peuvent-elles aboutir au même objet final ? Si oui, identifier précisément leur multiplicité avant de diviser.</div>`]
+]},
+{
+ id:"corps",title:"Structures algébriques et corps",icon:"03",
+ subtitle:"Lois, groupes, anneaux, corps, inverses et exemples.",
+ blocks:[
+ ["Loi de composition interne",`
+ <p>Une loi interne sur <span class="math">E</span> est une application <span class="math">⋆:E×E→E</span>. Elle peut être <em>associative</em>, <span class="math">(a⋆b)⋆c=a⋆(b⋆c)</span>, ou <em>commutative</em>, <span class="math">a⋆b=b⋆a</span>. Un <em>neutre</em> <span class="math">e</span> satisfait <span class="math">a⋆e=e⋆a=a</span>. S'il existe, il est unique.</p>
+ <p>Un élément <span class="math">a</span> est inversible pour <span class="math">⋆</span> s'il existe <span class="math">b</span> avec <span class="math">a⋆b=b⋆a=e</span>. Dans un cadre associatif unitaire, son inverse est unique. Une partie <span class="math">F⊆E</span> est stable si <span class="math">a,b∈F⇒a⋆b∈F</span>.</p>`],
+ ["Groupes et anneaux",`
+ <p>Un <strong>groupe</strong> est un ensemble muni d'une loi associative avec neutre, où chaque élément possède un inverse. Il est <em>abélien</em> si sa loi est commutative. Exemples : <span class="math">(ℤ,+)</span>, <span class="math">(ℝ,+)</span>, <span class="math">(ℝ∖{0},×)</span>. Les entiers non nuls sous la multiplication ne forment pas un groupe : <span class="math">2</span> n'a pas d'inverse entier.</p>
+ <p>Un <strong>anneau commutatif unitaire</strong> <span class="math">(A,+,×)</span> possède un groupe abélien pour <span class="math">+</span>, une multiplication associative et commutative de neutre <span class="math">1</span>, distributive sur <span class="math">+</span>. On suppose ici <span class="math">0≠1</span>. Exemples : <span class="math">ℤ</span> et <span class="math">ℝ[X]</span>. Dans <span class="math">ℤ</span>, seules <span class="math">−1</span> et <span class="math">1</span> sont inversibles pour la multiplication.</p>`],
+ ["Définition et exemples de corps",`
+ <p>Un <strong>corps commutatif</strong> <span class="math">K</span> est un anneau commutatif unitaire non nul dans lequel chaque élément non nul admet un inverse multiplicatif. De façon équivalente, <span class="math">(K,+)</span> et <span class="math">(K∖{0},×)</span> sont deux groupes abéliens, et la multiplication est distributive sur l'addition.</p>
+ <div class="formula">ℚ, ℝ et ℂ sont des corps ; ℤ n'est pas un corps.</div>
+ <p>Exemple fini simple : <span class="math">𝔽₂={0,1}</span> avec addition et multiplication modulo 2 ; <span class="math">1+1=0</span> et l'inverse multiplicatif de <span class="math">1</span> est <span class="math">1</span>. On ne peut pas, en revanche, diviser par zéro dans un corps.</p>
+ <div class="box warn"><strong>Ne pas confondre :</strong> « fermé pour les deux opérations » et « être un corps ». Pour qu'un sous-ensemble de <span class="math">ℝ</span> soit un sous-corps, il lui faut notamment <span class="math">0,1</span>, les opposés et l'inverse de chaque élément non nul.</div>`],
+ ["Conséquences des axiomes",`
+ <p>Dans un corps : <span class="math">a·0=0</span> par distributivité et simplification additive ; <span class="math">(−a)b=−(ab)</span> ; <span class="math">(−a)(−b)=ab</span>. Si <span class="math">ab=0</span>, alors <span class="math">a=0</span> ou <span class="math">b=0</span> : si <span class="math">a≠0</span>, multiplier <span class="math">ab=0</span> par <span class="math">a⁻¹</span> donne <span class="math">b=0</span>.</p>
+ <p>Pour <span class="math">a,b≠0</span>, <span class="math">(ab)⁻¹=b⁻¹a⁻¹</span> (donc <span class="math">a⁻¹b⁻¹</span> dans un corps commutatif). L'équation <span class="math">ax=b</span> admet alors l'unique solution <span class="math">x=a⁻¹b</span>.</p>`],
+ ["Corps ordonné : passerelle vers les réels",`
+ <p>Un corps ordonné est muni d'un ordre total compatible avec l'addition et la multiplication par un élément positif. Sur <span class="math">ℝ</span>, si <span class="math">a≤b</span>, alors <span class="math">a+c≤b+c</span> ; si <span class="math">c≥0</span>, <span class="math">ac≤bc</span>. Le cas <span class="math">c&lt;0</span> renverse le sens.</p>
+ <p>Dans un corps ordonné, <span class="math">x²≥0</span> pour tout <span class="math">x</span> ; ainsi <span class="math">−1</span> ne peut pas être un carré. Le corps <span class="math">ℂ</span> ne peut pas être ordonné comme un corps : <span class="math">i²=−1</span>. <span class="math">ℚ</span> est ordonné mais n'a pas la propriété de la borne supérieure de <span class="math">ℝ</span>.</p>`]
+]},
+{
+ id:"relations",title:"Relations d'ordre",icon:"04",
+ subtitle:"Ordres partiels et totaux ; maximal, maximum et majorants.",
+ blocks:[
+ ["Définition d'un ordre",`
+ <p>Une relation <span class="math">≼</span> sur <span class="math">E</span> est un ordre si elle est <strong>réflexive</strong> (<span class="math">x≼x</span>), <strong>antisymétrique</strong> (<span class="math">x≼y</span> et <span class="math">y≼x⇒x=y</span>) et <strong>transitive</strong> (<span class="math">x≼y≼z⇒x≼z</span>). Elle est <strong>totale</strong> lorsque deux éléments quelconques sont comparables.</p>
+ <p>L'ordre usuel <span class="math">≤</span> sur <span class="math">ℝ</span> est total. L'inclusion <span class="math">⊆</span> sur <span class="math">𝒫(E)</span> est généralement partielle : <span class="math">{1}</span> et <span class="math">{2}</span> sont incomparables. La divisibilité sur <span class="math">ℕ*</span> est aussi un ordre partiel : ni <span class="math">2|3</span>, ni <span class="math">3|2</span>.</p>`],
+ ["Plus grand élément ou élément maximal ?",`
+ <p>Un <strong>plus grand élément</strong> <span class="math">g</span> d'une partie <span class="math">A</span> appartient à <span class="math">A</span> et satisfait <span class="math">x≼g</span> pour tout <span class="math">x∈A</span>. Il est nécessairement unique. Un élément <strong>maximal</strong> <span class="math">m</span> appartient à <span class="math">A</span> et aucun autre élément de <span class="math">A</span> n'est strictement supérieur à <span class="math">m</span>.</p>
+ <p>Dans <span class="math">A={{1},{2}}</span> ordonné par inclusion, les deux éléments sont maximaux, sans plus grand élément. Dans un <em>ordre total</em>, un élément maximal est nécessairement un plus grand élément. Les notions de plus petit et minimal sont duales.</p>`],
+ ["Majorants et bornes abstraites",`
+ <p>Dans un ensemble ordonné <span class="math">E</span>, un majorant <span class="math">M</span> de <span class="math">A⊆E</span> vérifie <span class="math">x≼M</span> pour tout <span class="math">x∈A</span> ; il n'est pas obligé d'appartenir à <span class="math">A</span>. Un <em>maximum</em> est, lui, un majorant appartenant à <span class="math">A</span>. La borne supérieure, lorsqu'elle existe, est le plus petit des majorants.</p>
+ <div class="box"><strong>Exemple du tableau :</strong> « majorant », « maximum », « plus grand élément » et « élément maximal » ne sont pas des synonymes dans un ordre partiel. Toujours préciser l'ensemble et la relation employés.</div>`]
+]},
+{
+ id:"reels",title:"Réels et inégalités",icon:"05",
+ subtitle:"Corps ordonné complet, intervalles, partie entière et bornes.",
+ blocks:[
+ ["Comparer les réels",`
+ <p>Dans <span class="math">ℝ</span>, <span class="math">a≤b⇔b−a≥0</span>. L'ordre est total et compatible avec les opérations. On additionne deux inégalités de même sens ; on multiplie une inégalité par un réel positif en conservant le sens, par un réel négatif en le renversant.</p>
+ <div class="formula">0&lt;a≤b ⇒ 0&lt;1/b≤1/a ; &nbsp; 0≤a≤b ⇒ a²≤b².</div>
+ <p>Pour comparer des fractions, commencer par déterminer les signes des dénominateurs. Exemple : <span class="math">1/a≤1/b</span> pour <span class="math">0&lt;b≤a</span>. On ne met pas au carré une inégalité sans vérifier les signes : <span class="math">−3&lt;2</span> mais <span class="math">9&gt;4</span>.</p>`],
+ ["Intervalles et propriété de la borne supérieure",`
+ <p><span class="math">]a,b[={x:a&lt;x&lt;b}</span> ; <span class="math">[a,b]={x:a≤x≤b}</span>. Les crochets indiquent si les bornes sont incluses. Un ensemble <span class="math">A</span> est majoré si <span class="math">∃M∈ℝ,∀a∈A,a≤M</span> ; minoré de façon duale ; borné s'il est à la fois majoré et minoré.</p>
+ <p>Une partie <em>non vide et majorée</em> de <span class="math">ℝ</span> possède une borne supérieure <span class="math">s=sup A</span>. Pour le reconnaître : <span class="math">s</span> est majorant, puis pour tout <span class="math">ε&gt;0</span>, il existe <span class="math">a∈A</span> tel que <span class="math">s−ε&lt;a≤s</span>. Pour <span class="math">]0,1[</span>, <span class="math">sup=1</span> et <span class="math">inf=0</span>, sans maximum ni minimum.</p>
+ <p>Une partie non vide et minorée possède une borne inférieure. Cette propriété distingue <span class="math">ℝ</span> de <span class="math">ℚ</span> : l'ensemble des rationnels positifs dont le carré est inférieur à 2 est majoré dans <span class="math">ℚ</span>, mais n'y possède pas de borne supérieure rationnelle.</p>`],
+ ["Archimède, densité et partie entière",`
+ <p><strong>Archimède :</strong> pour tout <span class="math">x∈ℝ</span>, il existe un entier naturel <span class="math">n&gt;x</span>. Conséquence : pour <span class="math">ε&gt;0</span>, on peut trouver <span class="math">n</span> avec <span class="math">1/n&lt;ε</span>.</p>
+ <p>Tout réel <span class="math">x</span> possède une unique partie entière <span class="math">⌊x⌋∈ℤ</span> telle que <span class="math">⌊x⌋≤x&lt;⌊x⌋+1</span>. Attention : <span class="math">⌊−1,2⌋=−2</span>.</p>
+ <p><strong>Densité de ℚ dans ℝ :</strong> si <span class="math">a&lt;b</span>, il existe un rationnel <span class="math">r</span> vérifiant <span class="math">a&lt;r&lt;b</span>. Preuve-type : choisir <span class="math">n∈ℕ*</span> tel que <span class="math">n(b−a)&gt;1</span> puis un entier <span class="math">m</span> avec <span class="math">na&lt;m&lt;nb</span>. On peut prendre <span class="math">m=⌊na⌋+1</span> : <span class="math">m&gt;na</span> et <span class="math">m≤na+1&lt;nb</span>. Alors <span class="math">r=m/n</span> convient.</p>`],
+ ["Encadrements et arguments ε",`
+ <p>Si <span class="math">x≤y+ε</span> pour tout <span class="math">ε&gt;0</span>, alors <span class="math">x≤y</span> : sinon, prendre <span class="math">ε=(x−y)/2</span>. En revanche <span class="math">x&lt;y+ε</span> pour tout <span class="math">ε&gt;0</span> ne permet pas d'affirmer <span class="math">x&lt;y</span>.</p>
+ <div class="box warn"><strong>Rédaction :</strong> « on passe à la limite » doit toujours être précédé d'une convergence établie et d'une opération autorisée.</div>`]
+]},
+{
+ id:"valeur",title:"Valeur absolue et distance",icon:"06",
+ subtitle:"Définitions, équations, inéquations et inégalités triangulaires.",
+ blocks:[
+ ["Définition et propriétés",`
+ <div class="formula">|x|=max(x,−x)=x si x≥0 ; |x|=−x si x&lt;0.</div>
+ <p><span class="math">|x|≥0</span>, avec égalité si et seulement si <span class="math">x=0</span> ; <span class="math">|−x|=|x|</span> ; <span class="math">|xy|=|x||y|</span> ; pour <span class="math">y≠0</span>, <span class="math">|x/y|=|x|/|y|</span>. De plus, <span class="math">|x|²=x²</span>.</p>
+ <p>La distance de <span class="math">x</span> à <span class="math">a</span> sur la droite est <span class="math">|x−a|</span>. Ainsi <span class="math">|x−a|&lt;r</span>, pour <span class="math">r&gt;0</span>, décrit l'intervalle <span class="math">]a−r,a+r[</span>.</p>`],
+ ["Équations et inéquations",`
+ <p>Pour <span class="math">r&gt;0</span> :</p>
+ <div class="formula">|x−a|=r ⇔ x=a−r ou x=a+r.</div>
+ <div class="formula">|x−a|≤r ⇔ a−r≤x≤a+r.</div>
+ <div class="formula">|x−a|≥r ⇔ x≤a−r ou x≥a+r.</div>
+ <p>Si <span class="math">r=0</span>, <span class="math">|x−a|≤0⇔x=a</span> et <span class="math">|x−a|≥0</span> est toujours vraie. Si <span class="math">r&lt;0</span>, <span class="math">|x−a|≤r</span> n'a aucune solution et <span class="math">|x−a|≥r</span> est toujours vraie. Pour plusieurs valeurs absolues, découper la droite aux zéros des expressions intérieures, résoudre dans chaque intervalle et <em>vérifier</em> les candidats.</p>`],
+ ["Inégalité triangulaire et variante inverse",`
+ <div class="formula">|x+y|≤|x|+|y| ; &nbsp; ||x|−|y||≤|x−y|.</div>
+ <p>Preuve de la première : additionner <span class="math">−|x|≤x≤|x|</span> et <span class="math">−|y|≤y≤|y|</span>. Pour la seconde, <span class="math">|x|=|(x−y)+y|≤|x−y|+|y|</span> ; inverser les rôles de <span class="math">x</span> et <span class="math">y</span>.</p>
+ <p>Version géométrique : <span class="math">|x−z|≤|x−y|+|y−z|</span>. Elle sert à majorer une distance compliquée par la somme de deux distances accessibles.</p>
+ <div class="box warn"><strong>Attention :</strong> <span class="math">|x+y|=|x|+|y|</span> seulement dans certains cas, notamment lorsque <span class="math">x</span> et <span class="math">y</span> ont le même signe ou si l'un est nul.</div>`]
+]},
+{
+ id:"suites",title:"Suites numériques",icon:"07",
+ subtitle:"Définition, sommes, récurrence, monotonie et bornes.",
+ blocks:[
+ ["Définir une suite",`
+ <p>Une suite réelle est une application des entiers à partir d'un rang <span class="math">n₀</span> dans <span class="math">ℝ</span>. Une formule <em>explicite</em> donne directement <span class="math">uₙ</span> ; une <em>récurrence</em> donne les premiers termes et une règle pour les suivants. Une définition par <span class="math">uₙ₊₁=f(uₙ)</span> exige que chaque terme reste dans le domaine de <span class="math">f</span>.</p>
+ <p>Pour comparer deux suites à partir d'un certain rang, vérifier que le rang initial peut être ignoré pour l'étude d'une limite, mais pas pour l'affirmation « croissante sur tout son domaine ».</p>`],
+ ["Suites arithmétiques et géométriques",`
+ <p>Si <span class="math">uₙ₊₁=uₙ+r</span>, alors <span class="math">uₙ=uₚ+(n−p)r</span> pour <span class="math">n≥p</span>. La somme de termes consécutifs vaut <span class="math">(nombre de termes)×(premier+dernier)/2</span>.</p>
+ <p>Si <span class="math">uₙ₊₁=quₙ</span>, alors <span class="math">uₙ=uₚqⁿ⁻ᵖ</span>. Pour <span class="math">q≠1</span> :</p>
+ <div class="formula">1+q+⋯+qⁿ=(1−qⁿ⁺¹)/(1−q).</div>
+ <p>Si <span class="math">q=1</span>, cette somme vaut <span class="math">n+1</span>. Pour <span class="math">|q|&lt;1</span>, <span class="math">qⁿ→0</span>. Attention aux raisons négatives : la suite peut osciller.</p>`],
+ ["Variations et bornes",`
+ <p>Une suite est croissante si <span class="math">uₙ₊₁≥uₙ</span> à tout rang considéré. Étudier le signe de <span class="math">uₙ₊₁−uₙ</span>. Si <span class="math">uₙ&gt;0</span>, comparer aussi <span class="math">uₙ₊₁/uₙ</span> à 1. Si <span class="math">uₙ=f(n)</span>, une étude des variations de <span class="math">f</span> peut suffire.</p>
+ <p>Une suite est majorée s'il existe <span class="math">M</span> tel que <span class="math">uₙ≤M</span> pour tout rang. Elle est minorée de façon analogue ; bornée si <span class="math">|uₙ|≤M</span> pour un certain <span class="math">M≥0</span>. Pour une récurrence, établir d'abord par récurrence un <em>intervalle stable</em> <span class="math">I</span> tel que <span class="math">u₀∈I</span> et <span class="math">f(I)⊆I</span>.</p>`],
+ ["Étude d'une récurrence affine",`
+ <p>Soit <span class="math">uₙ₊₁=auₙ+b</span> avec <span class="math">a≠1</span>. Le point fixe est <span class="math">ℓ=b/(1−a)</span>. Poser <span class="math">vₙ=uₙ−ℓ</span> : alors <span class="math">vₙ₊₁=avₙ</span> et <span class="math">uₙ=ℓ+aⁿ(u₀−ℓ)</span>.</p>
+ <p>On peut conclure directement : si <span class="math">|a|&lt;1</span>, <span class="math">uₙ→ℓ</span>. Si <span class="math">a=1</span>, on retrouve la suite arithmétique <span class="math">uₙ=u₀+nb</span>. Les autres cas dépendent de <span class="math">a</span> et du terme initial : ne pas annoncer une limite sans les analyser.</p>`]
+]},
+{
+ id:"limites",title:"Limites de suites",icon:"08",
+ subtitle:"Définitions ε, opérations, comparaison, gendarmes, suites extraites.",
+ blocks:[
+ ["Définitions",`
+ <p><span class="math">uₙ→ℓ∈ℝ</span> si <span class="math">∀ε&gt;0,∃N∈ℕ,∀n≥N, |uₙ−ℓ|&lt;ε</span>. La limite, si elle existe, est unique ; la suite est dite convergente. Les premiers termes n'influencent pas la limite.</p>
+ <p><span class="math">uₙ→+∞</span> si <span class="math">∀A∈ℝ,∃N,∀n≥N,uₙ&gt;A</span> ; définition symétrique pour <span class="math">−∞</span>. Tendre vers l'infini n'est pas « converger vers un réel ». Toute suite convergente est bornée ; <span class="math">(−1)ⁿ</span> montre que la réciproque est fausse.</p>`],
+ ["Opérations et formes indéterminées",`
+ <p>Si <span class="math">uₙ→a</span> et <span class="math">vₙ→b</span>, alors somme et produit tendent respectivement vers <span class="math">a+b</span> et <span class="math">ab</span>. Pour le quotient, il faut <span class="math">b≠0</span>, ce qui garantit un dénominateur non nul à partir d'un certain rang. Des expressions telles que <span class="math">0/0</span>, <span class="math">∞/∞</span>, <span class="math">0×∞</span> ou <span class="math">∞−∞</span> requièrent une transformation préalable.</p>
+ <p>Pour un quotient de polynômes en <span class="math">n</span>, factoriser par la plus grande puissance de <span class="math">n</span> pertinente. Exemple : <span class="math">(3n²+n)/(n²+2)=(3+1/n)/(1+2/n²)→3</span>.</p>`],
+ ["Comparaison et gendarmes",`
+ <p>Si <span class="math">uₙ≤vₙ</span> à partir d'un certain rang et si les deux suites convergent, leurs limites vérifient <span class="math">lim uₙ≤lim vₙ</span> : la stricte inégalité n'est pas forcément conservée.</p>
+ <div class="formula">aₙ≤uₙ≤bₙ et aₙ,bₙ→ℓ ⇒ uₙ→ℓ.</div>
+ <p>C'est le théorème des gendarmes. Si <span class="math">|uₙ−ℓ|≤wₙ</span> et <span class="math">wₙ≥0→0</span>, il s'applique immédiatement. Si <span class="math">uₙ≥vₙ</span> à partir d'un rang et <span class="math">vₙ→+∞</span>, alors <span class="math">uₙ→+∞</span>.</p>`],
+ ["Suites extraites et limites usuelles",`
+ <p>Si <span class="math">uₙ→ℓ</span>, toute suite extraite <span class="math">uφ(n)</span>, avec <span class="math">φ(n)→∞</span>, tend vers <span class="math">ℓ</span>. Si <span class="math">u₂ₙ</span> et <span class="math">u₂ₙ₊₁</span> tendent vers deux limites différentes, <span class="math">uₙ</span> diverge.</p>
+ <div class="formula">1/nᵅ→0 (α&gt;0) ; &nbsp; qⁿ→0 si |q|&lt;1 ; &nbsp; qⁿ→+∞ si q&gt;1.</div>
+ <p>Pour <span class="math">q=−1</span>, la suite alterne entre 1 et −1. Pour <span class="math">q&lt;−1</span>, les sous-suites paires et impaires s'éloignent dans des sens opposés.</p>`],
+ ["Définition ε : une preuve modèle",`
+ <p>Montrons <span class="math">1/n→0</span> pour <span class="math">n≥1</span>. Soit <span class="math">ε&gt;0</span>. Par Archimède, choisir un entier <span class="math">N&gt;1/ε</span>. Pour <span class="math">n≥N</span>, <span class="math">0≤1/n≤1/N&lt;ε</span>. On a donc <span class="math">|1/n−0|&lt;ε</span>, ce qui est exactement la définition.</p>`]
+]},
+{
+ id:"convergence",title:"Théorèmes de convergence",icon:"09",
+ subtitle:"Monotonie, adjacence, point fixe, Cauchy et stratégie de preuve.",
+ blocks:[
+ ["Convergence monotone",`
+ <p>Une suite croissante et majorée de réels converge vers la borne supérieure de l'ensemble de ses termes. Une suite décroissante et minorée converge vers leur borne inférieure. Preuve dans le cas croissant : si <span class="math">ℓ=sup{uₙ}</span>, pour tout <span class="math">ε&gt;0</span>, il existe <span class="math">N</span> tel que <span class="math">ℓ−ε&lt;u_N≤ℓ</span>. Pour <span class="math">n≥N</span>, la croissance donne <span class="math">ℓ−ε&lt;uₙ≤ℓ</span>, d'où la convergence.</p>
+ <p>Une suite croissante <em>non majorée</em> tend vers <span class="math">+∞</span>. Le lien entre monotonie et complétude de <span class="math">ℝ</span> est essentiel : on ne peut pas remplacer gratuitement <span class="math">ℝ</span> par <span class="math">ℚ</span>.</p>`],
+ ["Suites adjacentes",`
+ <p>Deux suites <span class="math">(aₙ)</span> et <span class="math">(bₙ)</span> sont adjacentes lorsque <span class="math">aₙ</span> croît, <span class="math">bₙ</span> décroît et <span class="math">bₙ−aₙ→0</span>. La différence est alors décroissante et de limite 0, donc elle reste positive ou nulle. Les deux suites sont bornées, convergent et possèdent la même limite.</p>
+ <p>Cette méthode fournit aussi une <strong>approximation encadrée</strong> : <span class="math">aₙ≤ℓ≤bₙ</span>, avec erreur inférieure ou égale à <span class="math">bₙ−aₙ</span>.</p>`],
+ ["Récurrence et point fixe",`
+ <p>Pour <span class="math">uₙ₊₁=f(uₙ)</span>, chercher un domaine stable, prouver la convergence (souvent par monotonie et borne), puis utiliser la continuité de <span class="math">f</span> au point limite <span class="math">ℓ</span> pour obtenir <span class="math">ℓ=f(ℓ)</span>. Résoudre cette dernière équation <em>avant</em> la preuve de convergence fournit seulement des candidats.</p>
+ <p>Autre stratégie : si, sur un domaine stable, <span class="math">|f(x)−f(y)|≤q|x−y|</span> avec <span class="math">0≤q&lt;1</span> et un point fixe <span class="math">ℓ</span> connu, alors <span class="math">|uₙ−ℓ|≤qⁿ|u₀−ℓ|→0</span>. La conclusion ne requiert pas de monotonie.</p>`],
+ ["Complément : critère de Cauchy",`
+ <p>Une suite réelle est de Cauchy si <span class="math">∀ε&gt;0,∃N,∀p,n≥N,|uₚ−uₙ|&lt;ε</span>. Toute suite convergente est de Cauchy par l'inégalité triangulaire ; dans <span class="math">ℝ</span>, la réciproque est vraie grâce à la complétude. On peut donc prouver une convergence <em>sans connaître d'abord la limite</em>.</p>
+ <div class="box warn"><strong>Niveau :</strong> ce dernier critère est un approfondissement de première année ; on peut d'abord maîtriser gendarmes, monotonie et suites adjacentes.</div>`]
+]}
 ];
 
-const tabNames = [
-  ["cours", "📖 Cours"],
-  ["definitions", "📌 Définitions"],
-  ["proprietes", "✨ Propriétés"],
-  ["preuves", "🧩 Démonstrations"],
-  ["methodes", "🛠️ Méthodes"],
-  ["kholles", "🎙️ Khôlles"],
-  ["ds", "📝 DS"],
-  ["cartes", "🃏 Flashcards"]
+const questions=[
+["logique","Donner la négation de « ∀x∈E, ∃y∈F, P(x,y) ».","∃x∈E, ∀y∈F, ¬P(x,y). Les deux quantificateurs changent et la propriété est niée."],
+["logique","Prouver A=B avec des inclusions : quelle méthode ?","Montrer ∀x∈A, x∈B, puis ∀x∈B, x∈A."],
+["logique","Définir injectivité, surjectivité et bijectivité.","Injective : mêmes images ⇒ mêmes antécédents. Surjective : tout élément du but a au moins un antécédent. Bijective : les deux ; tout élément du but a exactement un antécédent."],
+["logique","L'image réciproque f⁻¹(B) requiert-elle f bijective ?","Non. f⁻¹(B)={x∈E:f(x)∈B} est définie pour toute application f. Seule l'application inverse f⁻¹:F→E exige une bijection."],
+["denombrement","Énoncer le principe multiplicatif.","Si toute construction comporte successivement a₁,…,aᵣ choix à chacune des étapes, le nombre total est leur produit. Si le nombre de choix dépend des étapes précédentes, le vérifier branche par branche."],
+["denombrement","Pourquoi C(n,k)=A(n,k)/k! ?","Chaque sous-ensemble de k éléments donne exactement k! listes ordonnées ; les arrangements comptent chaque sous-ensemble k! fois."],
+["denombrement","Démontrer C(n,k)=C(n,n−k).","La complémentation A↦E∖A est une bijection entre les parties à k éléments et celles à n−k éléments d'un ensemble E à n éléments."],
+["denombrement","Démontrer l'identité de Pascal.","Compter les parties à k éléments d'un ensemble à n+1 éléments selon qu'elles contiennent ou non un élément fixé : C(n+1,k)=C(n,k−1)+C(n,k)."],
+["corps","Définir un corps commutatif.","Anneau commutatif unitaire non nul dont chaque élément non nul possède un inverse multiplicatif ; addition et multiplication non nulle sont des groupes abéliens, avec distributivité."],
+["corps","Pourquoi ℤ n'est-il pas un corps ?","Par exemple 2∈ℤ n'a aucun inverse dans ℤ : il n'existe pas d'entier k vérifiant 2k=1."],
+["corps","Démontrer ab=0 ⇒ a=0 ou b=0 dans un corps.","Si a≠0, multiplier l'égalité ab=0 par a⁻¹ : b=0. Sinon a=0."],
+["corps","Pourquoi ℂ n'est-il pas un corps ordonné ?","Dans tout corps ordonné, tout carré est positif ou nul. Dans ℂ, i²=−1, contradiction si l'ordre était compatible avec les lois."],
+["relations","Donner les trois axiomes d'une relation d'ordre.","Réflexivité, antisymétrie, transitivité. Totalité = tout couple est comparable ; c'est une condition supplémentaire."],
+["relations","Maximal et plus grand : quelle différence ?","Plus grand = supérieur à tous les éléments ; maximal = aucun élément distinct ne lui est strictement supérieur. Dans un ordre partiel, plusieurs maximaux peuvent coexister sans plus grand."],
+["relations","Définir un majorant.","Un majorant M d'une partie A d'un ensemble ordonné E satisfait ∀a∈A, a≼M ; M appartient à E, pas nécessairement à A."],
+["reels","Définir la borne supérieure d'un ensemble de réels.","Pour A non vide majoré, sup A est le plus petit des majorants : c'est un majorant s tel que tout t<s échoue à majorer A."],
+["reels","Énoncer la propriété d'Archimède.","Pour tout réel x, il existe n∈ℕ tel que n>x ; en particulier, pour ε>0, on peut rendre 1/n inférieur à ε."],
+["reels","Pourquoi faut-il vérifier le signe en multipliant une inégalité ?","Si c>0 le sens reste le même ; si c<0 il s'inverse ; si c=0 les deux membres deviennent égaux et on ne peut en général récupérer l'inégalité initiale."],
+["valeur","Définir |x| et donner son interprétation.","|x|=max(x,−x), donc x si x≥0 et −x sinon. |x−a| est la distance entre x et a."],
+["valeur","Énoncer et prouver brièvement l'inégalité triangulaire.","|x+y|≤|x|+|y| : additionner −|x|≤x≤|x| et −|y|≤y≤|y|."],
+["valeur","Que vaut ||x|−|y|| au plus ?","||x|−|y||≤|x−y|. Utiliser |x|≤|x−y|+|y| et son analogue en échangeant x et y."],
+["suites","Donner le terme général d'une suite arithmétique.","Si uₙ₊₁=uₙ+r, alors uₙ=uₚ+(n−p)r pour n≥p."],
+["suites","Donner la somme d'une progression géométrique.","Pour q≠1, 1+q+⋯+qⁿ=(1−qⁿ⁺¹)/(1−q) ; si q=1, cette somme vaut n+1."],
+["suites","Comment prouver qu'un intervalle est stable par récurrence ?","Vérifier u₀∈I, puis f(I)⊆I pour uₙ₊₁=f(uₙ). L'induction entraîne uₙ∈I pour tout n."],
+["limites","Énoncer la définition ε d'une limite finie.","uₙ→ℓ si ∀ε>0, ∃N∈ℕ, ∀n≥N, |uₙ−ℓ|<ε."],
+["limites","Énoncer le théorème des gendarmes.","Si aₙ≤uₙ≤bₙ à partir d'un rang et si aₙ,bₙ→ℓ, alors uₙ→ℓ."],
+["limites","Une inégalité stricte passe-t-elle strictement à la limite ?","Non : 0<1/n pour n≥1, mais les limites des deux membres valent 0."],
+["limites","Comment prouver une divergence avec deux suites extraites ?","Si deux sous-suites convergent vers des limites distinctes, la suite de départ ne converge pas : toute sous-suite d'une suite convergente aurait la même limite."],
+["convergence","Énoncer le théorème de convergence monotone.","Une suite réelle croissante et majorée converge ; une suite décroissante et minorée converge."],
+["convergence","Définir deux suites adjacentes.","L'une est croissante, l'autre décroissante, et leur différence (décroissante moins croissante) tend vers 0 ; elles convergent vers la même limite."],
+["convergence","Pourquoi résoudre ℓ=f(ℓ) ne suffit pas ?","Une solution de point fixe est seulement une limite possible. Il faut d'abord démontrer que la suite converge, puis justifier le passage à la limite (par exemple grâce à la continuité de f)."],
+["convergence","Définir une suite de Cauchy.","∀ε>0,∃N,∀p,n≥N,|uₚ−uₙ|<ε. Dans ℝ, cela équivaut à la convergence."]
 ];
 
-const content = {
-  ensembles: {
-    cours: `
-      <span class="badge">Chapitre rédigé</span>
-      <span class="badge warn">À comparer avec tes feuilles</span>
-      <h3>1. Ensembles, éléments et inclusion</h3>
-      <p>Un <strong>ensemble</strong> est une collection d'objets appelés
-      <strong>éléments</strong>. Si x est un élément de A, on écrit
-      <strong>x ∈ A</strong>. Sinon, on écrit <strong>x ∉ A</strong>.</p>
-      <p>Dire que <strong>A ⊆ B</strong> signifie que tous les éléments de A
-      appartiennent également à B. Il faut bien distinguer l'appartenance
-      d'un objet à un ensemble et l'inclusion d'un ensemble dans un autre.</p>
-      <div class="callout"><strong>Exemple :</strong> si A = {1, 2, 3},
-      alors 2 ∈ A et {2} ⊆ A. En revanche, {2} ∈ A est faux :
-      les éléments affichés de A sont 1, 2 et 3.</div>
-      <p>L'ensemble vide, noté ∅, ne contient aucun élément. Il est inclus
-      dans tout ensemble : <strong>∅ ⊆ A</strong> pour tout A.</p>
-      <h3>2. Égalité et opérations ensemblistes</h3>
-      <p>Deux ensembles sont égaux lorsqu'ils ont exactement les mêmes éléments.
-      En pratique, on établit souvent <strong>A ⊆ B</strong>, puis
-      <strong>B ⊆ A</strong> : c'est la méthode de la double inclusion.</p>
-      <div class="math">A ∩ B = {x : x ∈ A et x ∈ B}<br>
-      A ∪ B = {x : x ∈ A ou x ∈ B}<br>
-      A ∖ B = {x : x ∈ A et x ∉ B}</div>
-      <p>Le « ou » de la réunion est <strong>inclusif</strong> :
-      un élément commun à A et B appartient lui aussi à A ∪ B.</p>
-      <div class="callout green"><strong>Exemple :</strong>
-      A = {1, 2, 3} et B = {3, 4}. Alors
-      A ∩ B = {3}, A ∪ B = {1, 2, 3, 4} et A ∖ B = {1, 2}.</div>
-      <p>Le complémentaire dépend de l'ensemble ambiant E :
-      le complémentaire de A dans E est <strong>E ∖ A</strong>.</p>
-      <h3>3. Produit cartésien et ensemble des parties</h3>
-      <p><strong>X × Y</strong> est l'ensemble des couples (x, y) tels que
-      x ∈ X et y ∈ Y. L'ordre des coordonnées compte généralement.</p>
-      <p><strong>𝒫(X)</strong> est l'ensemble de tous les sous-ensembles de X.
-      Si X = {a, b}, alors
-      𝒫(X) = {∅, {a}, {b}, {a, b}}.
-      Attention : ∅ ∈ 𝒫(X), parce que ∅ ⊆ X.</p>
-      <h3>4. Combien de fonctions de X vers Y ?</h3>
-      <p>Une fonction de X vers Y associe à chaque élément de X exactement
-      un élément de Y. Si X possède m éléments et Y en possède n,
-      le nombre de fonctions X → Y est <strong>n<sup>m</sup></strong> :
-      il y a n choix indépendants pour chacune des m entrées.</p>
-      <div class="callout"><strong>À retenir :</strong> si X a m éléments,
-      |𝒫(X)| = 2<sup>m</sup>. Si X a m éléments et Y en a n,
-      |X × Y| = mn.</div>
-    `,
-    definitions: `
-      <h3>Définitions précises</h3>
-      <p><strong>Inclusion :</strong> A ⊆ B signifie :
-      pour tout x, si x ∈ A, alors x ∈ B.</p>
-      <p><strong>Égalité :</strong> A = B signifie
-      A ⊆ B et B ⊆ A.</p>
-      <p><strong>Intersection :</strong> A ∩ B contient les éléments
-      appartenant simultanément à A et à B.</p>
-      <p><strong>Réunion :</strong> A ∪ B contient les éléments
-      appartenant à au moins un des ensembles A, B.</p>
-      <p><strong>Différence :</strong> A ∖ B contient les éléments
-      de A qui ne sont pas dans B.</p>
-      <p><strong>Produit cartésien :</strong> X × Y contient les couples
-      (x, y) avec x ∈ X et y ∈ Y.</p>
-      <p><strong>Ensemble des parties :</strong> 𝒫(X) est l'ensemble
-      de toutes les parties de X.</p>
-      <div class="callout"><strong>Point de vigilance :</strong>
-      x ∈ A et {x} ⊆ A ne sont pas la même écriture, même si
-      la première entraîne la seconde.</div>
-    `,
-    proprietes: `
-      <h3>Identités utiles</h3>
-      <div class="math">
-      A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)<br>
-      A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)<br>
-      E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B)<br>
-      E ∖ (A ∩ B) = (E ∖ A) ∪ (E ∖ B)
-      </div>
-      <p>Les deux dernières formules sont les <strong>lois de De Morgan</strong>.
-      Elles permettent de nier correctement un « ou » ou un « et ».</p>
-      <h3>Autres résultats</h3>
-      <p>∅ ⊆ A ; A ∩ ∅ = ∅ ; A ∪ ∅ = A ; A ∩ A = A ; A ∪ A = A.</p>
-      <p>Si X est fini et |X| = m, alors |𝒫(X)| = 2<sup>m</sup>.</p>
-      <div class="callout green"><strong>Interprétation :</strong>
-      pour construire une partie de X, chaque élément est soit sélectionné,
-      soit écarté. Cela donne deux choix pour chacun des m éléments.</div>
-    `,
-    preuves: `
-      <h3>Preuve 1 — Distributivité</h3>
-      <p>Montrons A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C).</p>
-      <ol>
-        <li>Choisissons un élément quelconque x.</li>
-        <li>x ∈ A ∩ (B ∪ C) signifie :
-        x ∈ A et (x ∈ B ou x ∈ C).</li>
-        <li>En distribuant « et » sur « ou », cela équivaut à :
-        (x ∈ A et x ∈ B) ou (x ∈ A et x ∈ C).</li>
-        <li>C'est exactement :
-        x ∈ (A ∩ B) ∪ (A ∩ C).</li>
-        <li>Les deux ensembles ont les mêmes éléments : ils sont égaux.</li>
-      </ol>
-      <h3>Preuve 2 — Loi de De Morgan</h3>
-      <p>Montrons E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B),
-      avec A et B inclus dans E.</p>
-      <ol>
-        <li>Soit x ∈ E.</li>
-        <li>x ∈ E ∖ (A ∪ B) équivaut à x ∉ A ∪ B.</li>
-        <li>Ne pas être dans une réunion signifie
-        x ∉ A <strong>et</strong> x ∉ B.</li>
-        <li>Autrement dit, x ∈ E ∖ A et x ∈ E ∖ B.</li>
-        <li>Donc x ∈ (E ∖ A) ∩ (E ∖ B).
-        Chaque étape étant réversible, les ensembles sont égaux.</li>
-      </ol>
-    `,
-    methodes: `
-      <h3>Montrer une inclusion A ⊆ B</h3>
-      <ol>
-        <li>Prendre un élément quelconque x ∈ A.</li>
-        <li>Utiliser les hypothèses pour montrer x ∈ B.</li>
-        <li>Conclure que tout élément de A appartient à B.</li>
-      </ol>
-      <h3>Montrer une égalité d'ensembles</h3>
-      <p>Soit effectuer une double inclusion, soit établir, pour tout x,
-      une chaîne d'équivalences entre « x appartient au premier ensemble »
-      et « x appartient au second ensemble ».</p>
-      <h3>Réfuter une égalité prétendue universelle</h3>
-      <p>Un seul contre-exemple suffit. Par exemple,
-      avec A = {1} et B = ∅, on a A ∪ B ≠ A ∩ B.</p>
-      <div class="callout"><strong>Piège récurrent :</strong>
-      vérifier un exemple où une formule marche ne suffit jamais
-      à démontrer qu'elle est vraie pour tous les ensembles.</div>
-    `,
-    kholles: `
-      <div class="exercise">
-        <h3>Khôlle originale n° 1</h3>
-        <p><strong>Questions :</strong> 1. Définir A ⊆ B et prouver ∅ ⊆ A.
-        2. Montrer E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B).
-        3. Pour X = {a, b, c}, donner toutes les parties de X.</p>
-        <button class="action" type="button" onclick="toggleSolution(this)">
-          Voir le corrigé
-        </button>
-        <div class="solution" hidden>
-          <p><strong>1.</strong> A ⊆ B signifie que tout élément de A est
-          dans B. Comme ∅ n'a aucun élément pouvant contredire cette
-          affirmation, ∅ ⊆ A.</p>
-          <p><strong>2.</strong> Pour x ∈ E :
-          x ∈ E ∖ (A ∪ B) ⇔ x ∉ A ∪ B
-          ⇔ (x ∉ A et x ∉ B)
-          ⇔ x ∈ (E ∖ A) ∩ (E ∖ B).
-          Les deux ensembles sont donc égaux.</p>
-          <p><strong>3.</strong> 𝒫(X) =
-          {∅, {a}, {b}, {c}, {a, b}, {a, c},
-          {b, c}, {a, b, c}}. Il y a 2³ = 8 parties.</p>
-        </div>
-      </div>
-      <p class="muted">Sujet d'entraînement créé pour cette application ;
-      il ne provient pas de ton enseignant.</p>
-    `,
-    ds: `
-      <div class="exercise">
-        <h3>Mini-DS original n° 1 — différence symétrique</h3>
-        <p>Soient A, B ⊆ E et
-        D = (A ∖ B) ∪ (B ∖ A).</p>
-        <ol>
-          <li>Décrire les éléments de D.</li>
-          <li>Prouver D = (A ∪ B) ∖ (A ∩ B).</li>
-          <li>Calculer D si A = {1,2,3,4} et B = {3,4,5}.</li>
-          <li>À quelle condition D = A ∪ B ?</li>
-        </ol>
-        <button class="action" type="button" onclick="toggleSolution(this)">
-          Voir le corrigé complet
-        </button>
-        <div class="solution" hidden>
-          <p><strong>1.</strong> D contient les éléments qui appartiennent
-          à exactement un des deux ensembles A et B.</p>
-          <p><strong>2.</strong> Soit x. On a
-          x ∈ D ⇔ [(x ∈ A et x ∉ B) ou
-          (x ∈ B et x ∉ A)].
-          Cela équivaut à « x appartient à A ou B, mais pas
-          aux deux » ; donc
-          x ∈ (A ∪ B) ∖ (A ∩ B).
-          Les ensembles ont ainsi les mêmes éléments.</p>
-          <p><strong>3.</strong> A ∖ B = {1,2} et
-          B ∖ A = {5}. Donc D = {1,2,5}.</p>
-          <p><strong>4.</strong> D = A ∪ B exactement lorsque rien
-          n'est retiré de A ∪ B, c'est-à-dire lorsque
-          A ∩ B = ∅. Les ensembles doivent être disjoints.</p>
-        </div>
-      </div>
-      <p class="muted">Mini-DS d'entraînement créé pour cette application ;
-      il ne provient pas de ton établissement.</p>
-    `
-  }
-};
-
-const cards = [
-  ["Que signifie A ⊆ B ?", "Tout élément de A appartient aussi à B."],
-  ["Comment prouver A = B ?", "Prouver A ⊆ B puis B ⊆ A."],
-  ["Quelle différence entre x ∈ A et {x} ⊆ A ?",
-   "La première concerne un élément ; la seconde concerne un ensemble. Si x ∈ A, alors {x} ⊆ A."],
-  ["∅ ∈ 𝒫(X) : vrai ou faux ?", "Vrai, car ∅ ⊆ X."],
-  ["Que contient A ∩ B ?", "Les éléments appartenant à A et à B."],
-  ["Que contient A ∪ B ?", "Les éléments appartenant à A ou à B, éventuellement aux deux."],
-  ["Si |X| = 3, combien de parties possède X ?", "2³ = 8 parties."],
-  ["Complémentaire d'une réunion ?",
-   "E ∖ (A ∪ B) = (E ∖ A) ∩ (E ∖ B)."]
+const colles=[
+{
+c:"logique",level:1,title:"Quantificateurs",
+q:"Cours : nier « chaque réel a un entier supérieur ». Exercice : nier « ∀x∈ℝ, ∃n∈ℕ, n>x » et dire si la négation est vraie.",
+a:"La négation est « ∃x∈ℝ, ∀n∈ℕ, n≤x ». Elle est fausse : la propriété d'Archimède donne, pour chaque réel x, un entier n>x. L'erreur habituelle consiste à changer seulement le premier quantificateur."
+},
+{
+c:"logique",level:1,title:"Une double inclusion",
+q:"Cours : méthode pour démontrer une égalité d'ensembles. Exercice : prouver A∖(B∪C)=(A∖B)∩(A∖C).",
+a:"Soit x. x∈A∖(B∪C) signifie x∈A et x∉B∪C, donc x∈A, x∉B et x∉C. Cela équivaut à x∈A∖B et x∈A∖C, c'est-à-dire x∈(A∖B)∩(A∖C). L'équivalence dans les deux sens prouve l'égalité."
+},
+{
+c:"logique",level:2,title:"Images réciproques",
+q:"Cours : définir f⁻¹(B) pour B⊆F. Exercice : démontrer f⁻¹(B∩C)=f⁻¹(B)∩f⁻¹(C), sans supposer f bijective.",
+a:"Pour x∈E : x∈f⁻¹(B∩C) ⇔ f(x)∈B∩C ⇔ f(x)∈B et f(x)∈C ⇔ x∈f⁻¹(B) et x∈f⁻¹(C). Les ensembles sont égaux. Aucune bijectivité n'a été utilisée."
+},
+{
+c:"logique",level:2,title:"Injection sur ensemble fini",
+q:"Cours : rappeler le lien injection/surjection à cardinal égal. Exercice : f:{1,…,n}→{1,…,n} est injective. Montrer qu'elle est bijective.",
+a:"Les n images f(1),…,f(n) sont distinctes grâce à l'injectivité. Elles forment donc un sous-ensemble à n éléments de l'ensemble d'arrivée, qui en a n : elles constituent tout le but. f est surjective, donc bijective."
+},
+{
+c:"denombrement",level:1,title:"Codes à quatre chiffres",
+q:"Cours : rappeler le principe multiplicatif. Exercice : combien de codes de quatre chiffres distincts commencent par un chiffre non nul ?",
+a:"Premier chiffre : 9 choix parmi 1,…,9. Deuxième : 9 choix parmi les dix chiffres, sauf celui déjà pris ; le zéro est maintenant permis. Puis 8 et 7 choix. Total : 9×9×8×7=4536."
+},
+{
+c:"denombrement",level:2,title:"Comités avec contrainte",
+q:"Cours : définir C(n,k). Exercice : parmi 9 personnes, combien de comités de 4 contiennent Alice mais pas Bob ?",
+a:"Alice est imposée et Bob exclu. On choisit donc les 3 autres membres parmi les 7 personnes restantes : C(7,3)=35. L'ordre des membres du comité ne compte pas."
+},
+{
+c:"denombrement",level:2,title:"Deux personnes côte à côte",
+q:"Cours : nombre de permutations de n objets distincts. Exercice : placer 8 personnes sur une ligne en imposant qu'Alice et Bob soient voisins.",
+a:"Traiter Alice et Bob comme un bloc : les six autres personnes et ce bloc font sept objets, disposables de 7! façons. L'ordre interne du bloc a 2 choix. Total : 2×7!=10080 ; aucune disposition n'est comptée deux fois."
+},
+{
+c:"denombrement",level:3,title:"Double comptage",
+q:"Cours : énoncer la formule des parties. Exercice : prouver Σ(k=0…n) kC(n,k)=n2ⁿ⁻¹ pour n≥1.",
+a:"Compter les couples (A,x) où A⊆E et x∈A, |E|=n. Pour |A|=k : C(n,k) choix de A, puis k choix de x ; cela donne le membre gauche. Sinon choisir x de n façons, puis choisir librement A∖{x} parmi n−1 éléments : 2ⁿ⁻¹ possibilités. D'où l'identité."
+},
+{
+c:"corps",level:1,title:"ℤ n'est pas un corps",
+q:"Cours : donner la définition d'un corps. Exercice : expliquer pourquoi (ℤ,+,×) n'est pas un corps mais (ℚ,+,×) en est un.",
+a:"Dans ℤ, l'élément non nul 2 n'a pas d'inverse multiplicatif entier : 2k=1 n'a pas de solution entière. Dans ℚ, tout rationnel non nul p/q possède l'inverse q/p ; les autres axiomes viennent des opérations usuelles."
+},
+{
+c:"corps",level:2,title:"Produit nul",
+q:"Cours : propriété du produit nul dans un corps. Exercice : résoudre (x−2)(x+3)=0 dans ℚ.",
+a:"Dans un corps, ab=0 implique a=0 ou b=0 : si a≠0 on multiplie par a⁻¹. Ici x−2=0 ou x+3=0. L'ensemble des solutions dans ℚ est {2,−3}."
+},
+{
+c:"corps",level:2,title:"Sous-corps de ℝ",
+q:"Cours : citer les fermetures requises pour un sous-corps. Exercice : l'ensemble Q(√2)={a+b√2:a,b∈ℚ} est-il un sous-corps de ℝ ?",
+a:"Il contient 0 et 1, est stable pour somme et opposé. Produit : (a+b√2)(c+d√2)=(ac+2bd)+(ad+bc)√2. Pour x=a+b√2≠0, x⁻¹=(a−b√2)/(a²−2b²). Le dénominateur est non nul : sinon a²=2b² impliquerait a=b=0, car √2 est irrationnel. L'inverse appartient à Q(√2). C'est donc un sous-corps."
+},
+{
+c:"corps",level:3,title:"Un inverse qui ne se devine pas",
+q:"Cours : rappeler quand un élément est inversible. Exercice : calculer l'inverse de 2+√3 dans Q(√3).",
+a:"Multiplier par le conjugué : (2+√3)(2−√3)=4−3=1. Donc (2+√3)⁻¹=2−√3. Comme le produit vaut 1, il s'agit bien de l'inverse dans le sous-corps considéré."
+},
+{
+c:"relations",level:1,title:"La divisibilité",
+q:"Cours : trois axiomes d'un ordre. Exercice : la divisibilité sur ℕ* est-elle un ordre total ?",
+a:"Réflexivité : a|a. Antisymétrie sur les positifs : si a|b et b|a, alors a=b. Transitivité : a|b et b|c entraînent a|c. C'est un ordre partiel, non total : 2 et 3 sont incomparables."
+},
+{
+c:"relations",level:2,title:"Maximaux sans plus grand",
+q:"Cours : distinguer maximal et plus grand. Exercice : étudier {{1},{2}} muni de l'inclusion.",
+a:"{1} et {2} sont tous deux maximaux, car aucun autre élément de l'ensemble ne contient strictement l'un d'eux. Aucun n'inclut l'autre : il n'y a donc pas de plus grand élément. Leur unicité éventuelle n'est pas garantie en ordre partiel."
+},
+{
+c:"relations",level:2,title:"Ordre par inclusion",
+q:"Cours : définir un majorant pour ⊆. Exercice : dans 𝒫({1,2,3}), étudier A={{1},{1,2}} : maximum, majorants, borne supérieure.",
+a:"{1,2} appartient à A et contient chacun de ses éléments : c'est son maximum. Les majorants dans 𝒫({1,2,3}) sont {1,2} et {1,2,3}. Leur plus petit élément pour l'inclusion est {1,2} : c'est sup A."
+},
+{
+c:"relations",level:3,title:"Plus grand élément et unicité",
+q:"Cours : définir un plus grand élément. Exercice : prouver qu'un ensemble ordonné en possède au plus un.",
+a:"Supposons g et h tous deux plus grands. Comme g est plus grand et h appartient à A, h≼g. De même, g≼h. L'antisymétrie donne g=h. La preuve dépend de l'appartenance des deux éléments à A."
+},
+{
+c:"reels",level:1,title:"Une comparaison",
+q:"Cours : règle de multiplication d'une inégalité. Exercice : si 0<a<b, comparer 1/a et 1/b.",
+a:"Puisque ab>0, multiplier a<b par 1/(ab)>0 conserve le sens : 1/b<1/a. Les deux inverses sont positifs. Dire seulement « on inverse donc on change le signe » ne justifie pas le résultat."
+},
+{
+c:"reels",level:2,title:"Supremum non atteint",
+q:"Cours : définir un supremum. Exercice : A={1−1/n:n≥1}. Déterminer inf, sup, min et max.",
+a:"Le premier terme vaut 0. Les termes croissent strictement, restent inférieurs à 1 et tendent vers 1. Donc inf A=min A=0 ; sup A=1 ; max A n'existe pas car 1∉A."
+},
+{
+c:"reels",level:2,title:"Un argument ε",
+q:"Cours : caractériser sup A. Exercice : si x≤y+ε pour tout ε>0, montrer x≤y.",
+a:"Supposons x>y. Alors ε=(x−y)/2>0 et y+ε=(x+y)/2<x, ce qui contredit l'hypothèse. Donc x≤y. L'argument ne prouve pas une inégalité stricte."
+},
+{
+c:"reels",level:3,title:"Densité des rationnels",
+q:"Cours : énoncer la propriété d'Archimède. Exercice : si a<b, construire un rationnel entre a et b.",
+a:"Prendre n∈ℕ* tel que n(b−a)>1. Poser m=⌊na⌋+1. On a na<m≤na+1<nb. Ainsi a<m/n<b et m/n∈ℚ. Le choix de n et les deux inégalités sont indispensables."
+},
+{
+c:"valeur",level:1,title:"Deux inéquations",
+q:"Cours : interpréter |x−a|. Exercice : résoudre |2x−3|≤5 et |x−1|>2.",
+a:"−5≤2x−3≤5 donne −2≤2x≤8, donc −1≤x≤4. Par ailleurs |x−1|>2 équivaut à x−1<−2 ou x−1>2, soit x<−1 ou x>3."
+},
+{
+c:"valeur",level:2,title:"Somme de distances",
+q:"Cours : rappeler l'inégalité triangulaire. Exercice : résoudre |x−1|+|x+1|=4.",
+a:"Couper en −1 et 1. Si x≤−1, la somme vaut −2x, d'où x=−2. Si −1≤x≤1, elle vaut 2 : aucune solution. Si x≥1, elle vaut 2x, d'où x=2. Les deux candidats appartiennent à leurs intervalles : solutions {−2,2}."
+},
+{
+c:"valeur",level:2,title:"Inégalité triangulaire inverse",
+q:"Cours : prouver ||x|−|y||≤|x−y|. Exercice : majorer ||uₙ|−|ℓ|| si |uₙ−ℓ|≤1/n.",
+a:"|x|≤|x−y|+|y| donne |x|−|y|≤|x−y|. En échangeant x,y, on obtient l'autre sens. Avec x=uₙ,y=ℓ : 0≤||uₙ|−|ℓ||≤|uₙ−ℓ|≤1/n ; donc |uₙ|→|ℓ|."
+},
+{
+c:"valeur",level:3,title:"Inéquation par intervalles",
+q:"Cours : méthode des changements de signe. Exercice : résoudre |x−2|+|x+1|≤5.",
+a:"Pour x≤−1, la somme vaut 1−2x ; l'inégalité impose x≥−2, donc [−2,−1]. Pour −1≤x≤2, elle vaut 3 : tout l'intervalle convient. Pour x≥2, elle vaut 2x−1 ; 2x−1≤5 donne x≤3, donc [2,3]. Réunion : [−2,3]."
+},
+{
+c:"suites",level:1,title:"Une suite arithmétique",
+q:"Cours : terme général et somme d'une suite arithmétique. Exercice : u₀=5, uₙ₊₁=uₙ−2 ; trouver uₙ et Σ(k=0…n)uₖ.",
+a:"La raison est −2, donc uₙ=5−2n. Il y a n+1 termes, premier 5, dernier 5−2n. La somme vaut (n+1)(10−2n)/2=(n+1)(5−n)."
+},
+{
+c:"suites",level:1,title:"Une suite géométrique",
+q:"Cours : formule de somme. Exercice : Σ(k=0…n)(1/3)ᵏ et sa limite.",
+a:"Pour q=1/3≠1, Sₙ=(1−(1/3)ⁿ⁺¹)/(1−1/3)=(3/2)(1−3⁻⁽ⁿ⁺¹⁾). Puisque 3⁻⁽ⁿ⁺¹⁾→0, Sₙ→3/2."
+},
+{
+c:"suites",level:2,title:"Variations d'un quotient",
+q:"Cours : définir une suite croissante. Exercice : étudier uₙ=n/(n+1), n≥0.",
+a:"uₙ₊₁−uₙ=(n+1)/(n+2)−n/(n+1)=1/[(n+1)(n+2)]>0. Donc la suite croît strictement. 0≤uₙ<1 et uₙ=1−1/(n+1)→1."
+},
+{
+c:"suites",level:3,title:"Récurrence affine",
+q:"Cours : technique du point fixe. Exercice : u₀=0, uₙ₊₁=(uₙ+3)/4. Déterminer uₙ.",
+a:"Le point fixe est ℓ=1. Avec vₙ=uₙ−1, on obtient vₙ₊₁=vₙ/4 et v₀=−1. Ainsi vₙ=−4⁻ⁿ et uₙ=1−4⁻ⁿ. La formule prouve que uₙ croît vers 1 et reste inférieure à 1."
+},
+{
+c:"limites",level:1,title:"Une limite par ε",
+q:"Cours : définir uₙ→0. Exercice : montrer directement que 2/(n+1)→0.",
+a:"Soit ε>0. Par Archimède, prendre un entier N>2/ε. Si n≥N, alors 0≤2/(n+1)≤2/N<ε. C'est la définition de la convergence vers 0."
+},
+{
+c:"limites",level:2,title:"Oscillations amorties",
+q:"Cours : énoncer les gendarmes. Exercice : limite de uₙ=(−1)ⁿn/(n²+1).",
+a:"Pour n≥1, |uₙ|=n/(n²+1)≤1/n. Comme 1/n→0, on a −1/n≤uₙ≤1/n : les gendarmes donnent uₙ→0. L'oscillation du signe n'empêche pas la convergence."
+},
+{
+c:"limites",level:2,title:"Deux suites extraites",
+q:"Cours : propriété des sous-suites d'une suite convergente. Exercice : (−1)ⁿ+1/n converge-t-elle ?",
+a:"Pour n≥1, u₂ₙ=1+1/(2n)→1 et u₂ₙ₊₁=−1+1/(2n+1)→−1. Les deux sous-suites ont des limites distinctes : la suite initiale ne converge pas."
+},
+{
+c:"limites",level:3,title:"Quotient de polynômes",
+q:"Cours : citer une forme indéterminée. Exercice : limite de (3n²−2n)/(5n²+n+1).",
+a:"La forme initiale ∞/∞ ne conclut rien. Pour n≥1, diviser numérateur et dénominateur par n² : (3−2/n)/(5+1/n+1/n²). Les petits termes tendent vers 0 et le dénominateur limite vaut 5≠0 : la limite est 3/5."
+},
+{
+c:"convergence",level:2,title:"Suite monotone",
+q:"Cours : théorème de convergence monotone. Exercice : uₙ=Σ(k=1…n)1/[k(k+1)] ; prouver la convergence et trouver la limite.",
+a:"Chaque nouveau terme 1/[(n+1)(n+2)] est positif : uₙ croît. Or 1/[k(k+1)]=1/k−1/(k+1), donc la somme télescopique vaut uₙ=1−1/(n+1)<1. Elle est croissante et majorée, donc converge ; la formule donne la limite 1."
+},
+{
+c:"convergence",level:2,title:"Deux suites adjacentes",
+q:"Cours : définir des suites adjacentes. Exercice : aₙ=1−1/n et bₙ=1+1/n pour n≥1 ; conclure.",
+a:"aₙ croît car 1/n décroît ; bₙ décroît. bₙ−aₙ=2/n→0. Elles sont adjacentes et leur limite commune est 1. De plus aₙ≤1≤bₙ et l'écart vaut 2/n."
+},
+{
+c:"convergence",level:3,title:"Racine récurrente",
+q:"Cours : ordre d'étude d'une récurrence. Exercice : u₀=0, uₙ₊₁=√(2+uₙ) ; démontrer la limite.",
+a:"[0,2] est stable : si 0≤uₙ≤2, alors 0≤√(2+uₙ)≤2. La fonction x↦√(2+x) est croissante ; u₁≥u₀ entraîne par récurrence uₙ₊₁≥uₙ. La suite converge donc vers ℓ∈[0,2]. Par continuité, ℓ=√(2+ℓ). En élevant au carré, (ℓ−2)(ℓ+1)=0 ; ℓ≥0 impose ℓ=2."
+},
+{
+c:"convergence",level:3,title:"Contraction explicite",
+q:"Cours : pourquoi une contraction permet-elle de conclure ? Exercice : u₀∈ℝ, uₙ₊₁=(uₙ+2)/3. Trouver la limite et une borne de l'erreur.",
+a:"Le point fixe vérifie 3ℓ=ℓ+2, donc ℓ=1. Comme uₙ₊₁−1=(uₙ−1)/3, par récurrence |uₙ−1|=3⁻ⁿ|u₀−1|. Cette borne tend vers 0 : uₙ→1, sans qu'aucune monotonie soit nécessaire."
+}
 ];
 
-let currentChapter = "ensembles";
-let currentTab = "cours";
-let cardIndex = 0;
-let cardRevealed = false;
-let needsReview = new Set();
-
-try {
-  const saved = JSON.parse(localStorage.getItem("maths-review-v1") || "[]");
-  if (Array.isArray(saved)) {
-    needsReview = new Set(saved.filter(n => Number.isInteger(n) && n >= 0 && n < cards.length));
-  }
-} catch (_) { /* Le site reste utilisable si le stockage est bloqué. */ }
-
-function saveReview() {
-  try {
-    localStorage.setItem("maths-review-v1", JSON.stringify([...needsReview]));
-  } catch (_) {}
-  document.getElementById("review-count").textContent = needsReview.size;
+const ds=[
+{
+c:"logique",level:1,title:"DS 01 — Ensembles et applications",
+q:`<ol><li>Montrer A∩(B∪C)=(A∩B)∪(A∩C).</li><li>Si f:E→F, prouver f⁻¹(B∩C)=f⁻¹(B)∩f⁻¹(C).</li><li>Si E et F sont finis de même cardinal et f:E→F injective, conclure.</li></ol>`,
+a:`<ol><li>Pour x quelconque, x appartient au membre gauche ssi x∈A et (x∈B ou x∈C), ssi (x∈A∩B ou x∈A∩C). Les appartenances sont équivalentes.</li><li>x∈f⁻¹(B∩C) ssi f(x)∈B et f(x)∈C, ssi x appartient aux deux images réciproques. La bijectivité de f est inutile.</li><li>Les images d'éléments distincts sont distinctes ; puisqu'il y a autant d'éléments au départ et à l'arrivée, ces images remplissent F. f est surjective et donc bijective.</li></ol>`
+},
+{
+c:"denombrement",level:2,title:"DS 02 — Permutations contraintes",
+q:`<ol><li>Combien d'anagrammes distinctes du mot BANANE ?</li><li>Combien commencent par B ?</li><li>Combien commencent et finissent par A ?</li></ol>`,
+a:`<ol><li>Six lettres avec A deux fois, N deux fois, B et E une fois : 6!/(2!2!)=180.</li><li>B fixé : placer les cinq lettres A,A,N,N,E, soit 5!/(2!2!)=30.</li><li>Les deux A occupent les extrémités ; placer B,N,N,E aux quatre places du milieu : 4!/2!=12. Les deux A identiques ne créent aucun facteur 2.</li></ol>`
+},
+{
+c:"denombrement",level:3,title:"DS 03 — Décompte par deux chemins",
+q:`<ol><li>Dans un ensemble E de n≥2 éléments, compter les couples (A,x) tels que A⊆E et x∈A.</li><li>En déduire Σ(k=0…n)kC(n,k)=n2ⁿ⁻¹.</li><li>Compter les couples (A,{x,y}) où {x,y}⊆A et x≠y, puis déduire Σ(k=0…n)C(k,2)C(n,k)=C(n,2)2ⁿ⁻².</li></ol>`,
+a:`<ol><li>Choisir x de n façons, puis la présence/absence des n−1 autres éléments dans A : n2ⁿ⁻¹ couples.</li><li>Si |A|=k, choisir A de C(n,k) façons puis x de k façons. En sommant selon k, on obtient l'identité.</li><li>Choisir d'abord la partie à deux éléments {x,y} parmi E : C(n,2) choix. Les n−2 éléments restants peuvent librement appartenir à A : 2ⁿ⁻² choix. Par taille k de A, on a C(n,k)C(k,2) choix. Égaliser les deux résultats.</li></ol>`
+},
+{
+c:"corps",level:2,title:"DS 04 — Corps et inverses",
+q:`<ol><li>Rappeler pourquoi ℚ est un corps mais ℤ n'en est pas un.</li><li>Prouver que si a,b sont non nuls dans un corps commutatif, (ab)⁻¹=a⁻¹b⁻¹.</li><li>Résoudre (2+√3)x=1 dans ℚ(√3).</li></ol>`,
+a:`<ol><li>Chaque rationnel non nul p/q a l'inverse q/p, alors que 2 ne possède pas d'inverse entier.</li><li>Par associativité et commutativité, (ab)(a⁻¹b⁻¹)=(aa⁻¹)(bb⁻¹)=1. Un inverse étant unique, c'est bien celui de ab.</li><li>(2+√3)(2−√3)=1. Le coefficient est non nul et son inverse vaut 2−√3 ; l'unique solution est donc x=2−√3, élément de ℚ(√3).</li></ol>`
+},
+{
+c:"relations",level:2,title:"DS 05 — Un ordre non total",
+q:`<ol><li>Montrer que ⊆ définit un ordre sur 𝒫({1,2,3}).</li><li>Pour A={{1},{2}}, déterminer les éléments maximaux et l'éventuel plus grand élément.</li><li>Dans 𝒫({1,2,3}), déterminer tous les majorants de A et sa borne supérieure.</li></ol>`,
+a:`<ol><li>Chaque partie est incluse en elle-même. Deux inclusions réciproques donnent l'égalité. La composition de deux inclusions donne l'inclusion : réflexivité, antisymétrie, transitivité.</li><li>Dans A, ni {1} ni {2} n'est strictement au-dessous de l'autre : les deux sont maximaux. Aucun n'inclut l'autre : pas de plus grand élément.</li><li>Un majorant doit contenir à la fois 1 et 2 : ce sont {1,2} et {1,2,3}. Le plus petit est {1,2}, donc sup A={1,2} dans l'ordre par inclusion.</li></ol>`
+},
+{
+c:"reels",level:3,title:"DS 06 — Bornes et approximation",
+q:`<ol><li>Pour A={n/(n+1):n∈ℕ}, prouver que 1 est un majorant.</li><li>Prouver qu'aucun s&lt;1 n'est majorant ; préciser sup, inf, max et min.</li><li>En déduire que 1/n→0 par un encadrement approprié.</li></ol>`,
+a:`<ol><li>n/(n+1)=1−1/(n+1)&lt;1 puisque n+1&gt;0.</li><li>Pour ε=1−s&gt;0, choisir n tel que 1/(n+1)&lt;ε : alors n/(n+1)&gt;s. Un tel n existe par Archimède. Donc sup A=1, non atteint. Le premier terme est 0 et la suite croît : inf A=min A=0, pas de maximum.</li><li>Pour n≥1, 1/n≥0 et, pour tout ε&gt;0, Archimède donne N&gt;1/ε ; si n≥N, 1/n≤1/N&lt;ε. Donc 1/n→0.</li></ol>`
+},
+{
+c:"valeur",level:2,title:"DS 07 — Distance et intervalles",
+q:`<ol><li>Résoudre |2x−1|&lt;3 et donner la borne supérieure de l'ensemble des solutions.</li><li>Résoudre |x−2|+|x+1|=5.</li><li>Montrer ||x|−|y||≤|x−y| et l'utiliser pour prouver que uₙ→ℓ implique |uₙ|→|ℓ|.</li></ol>`,
+a:`<ol><li>−3&lt;2x−1&lt;3 ⇔ −1&lt;x&lt;2. Supremum : 2, non atteint.</li><li>Si x≤−1, la somme vaut 1−2x : x=−2. Si −1≤x≤2, elle vaut 3 : impossible. Si x≥2, elle vaut 2x−1 : x=3. Solutions {−2,3}.</li><li>L'inégalité triangulaire donne |x|−|y|≤|x−y|, puis l'inégalité symétrique en échangeant x et y. Donc ||uₙ|−|ℓ||≤|uₙ−ℓ|→0 ; les gendarmes concluent.</li></ol>`
+},
+{
+c:"suites",level:2,title:"DS 08 — Géométrique et affine",
+q:`<ol><li>Calculer Sₙ=Σ(k=0…n)(2/3)ᵏ et sa limite.</li><li>Si u₀=4 et uₙ₊₁=(2uₙ+3)/5, déterminer le point fixe ℓ.</li><li>Donner uₙ, son sens de variation et sa limite.</li></ol>`,
+a:`<ol><li>Sₙ=(1−(2/3)ⁿ⁺¹)/(1−2/3)=3(1−(2/3)ⁿ⁺¹), donc Sₙ→3.</li><li>ℓ=(2ℓ+3)/5, soit 3ℓ=3 et ℓ=1.</li><li>vₙ=uₙ−1 vérifie vₙ₊₁=(2/5)vₙ, v₀=3. Ainsi uₙ=1+3(2/5)ⁿ, strictement décroissante puisque 0&lt;2/5&lt;1, minorée par 1 et convergeant vers 1.</li></ol>`
+},
+{
+c:"limites",level:2,title:"DS 09 — Oscillation et gendarmes",
+q:`<ol><li>Montrer que vₙ=(−1)ⁿ ne converge pas.</li><li>Étudier uₙ=(−1)ⁿ/(n+1).</li><li>Déterminer la limite de wₙ=(3n²+(-1)ⁿn)/(2n²+1).</li></ol>`,
+a:`<ol><li>Les termes pairs sont égaux à 1 et les termes impairs à −1 ; ces sous-suites ont des limites différentes.</li><li>|uₙ|=1/(n+1)→0. Ainsi −1/(n+1)≤uₙ≤1/(n+1), donc uₙ→0.</li><li>Diviser par n², pour n≥1 : wₙ=[3+(-1)ⁿ/n]/[2+1/n²]. Le terme oscillant divisé par n tend vers 0 par encadrement, le dénominateur vers 2≠0. Donc wₙ→3/2.</li></ol>`
+},
+{
+c:"convergence",level:3,title:"DS 10 — Suite récurrente non linéaire",
+q:`<ol><li>u₀=1, uₙ₊₁=√(2+uₙ). Prouver 1≤uₙ≤2.</li><li>Prouver que la suite est croissante.</li><li>Calculer sa limite sans la présupposer.</li></ol>`,
+a:`<ol><li>u₀∈[1,2]. Si uₙ∈[1,2], alors √(2+uₙ)∈[√3,2]⊆[1,2]. La propriété vaut par récurrence.</li><li>u₁=√3≥u₀. La fonction f(x)=√(2+x) est croissante sur [1,2]. Si uₙ₊₁≥uₙ, alors uₙ₊₂=f(uₙ₊₁)≥f(uₙ)=uₙ₊₁. La suite est croissante.</li><li>Croissante et majorée, elle converge vers ℓ∈[1,2]. Par continuité, ℓ=√(2+ℓ), donc (ℓ−2)(ℓ+1)=0 ; seul ℓ=2 appartient à [1,2].</li></ol>`
+},
+{
+c:"convergence",level:3,title:"DS 11 — Adjacence et encadrements",
+q:`<ol><li>Pour n≥1, définir aₙ=Σ(k=1…n)1/k² et bₙ=aₙ+1/n. Étudier la variation de a.</li><li>Calculer bₙ₊₁−bₙ et en déduire que b décroît.</li><li>Conclure quant aux limites et majorer l'erreur bₙ−aₙ.</li></ol>`,
+a:`<ol><li>aₙ₊₁−aₙ=1/(n+1)²&gt;0 : a croît.</li><li>bₙ₊₁−bₙ=1/(n+1)²+1/(n+1)−1/n=1/(n+1)²−1/[n(n+1)]=−1/[n(n+1)²]&lt;0.</li><li>bₙ−aₙ=1/n→0. Les suites sont adjacentes : elles convergent vers une limite commune ℓ, avec aₙ≤ℓ≤bₙ. Ainsi 0≤ℓ−aₙ≤1/n. Il n'est pas nécessaire de connaître une expression de ℓ.</li></ol>`
+},
+{
+c:"convergence",level:3,title:"DS 12 — Contrôle d'erreur",
+q:`<ol><li>Soit u₀∈[0,2] et uₙ₊₁=(uₙ+2)/3. Montrer que [0,2] est stable.</li><li>Montrer |uₙ−1|≤3⁻ⁿ|u₀−1| et conclure.</li><li>Pour une précision ε&gt;0, donner une condition suffisante sur n.</li></ol>`,
+a:`<ol><li>Si 0≤uₙ≤2, alors 2/3≤(uₙ+2)/3≤4/3≤2. La récurrence assure uₙ∈[0,2] pour tout n.</li><li>uₙ₊₁−1=(uₙ−1)/3. Par récurrence, |uₙ−1|=3⁻ⁿ|u₀−1|. Comme 3⁻ⁿ→0, uₙ→1. La monotonie n'était pas nécessaire.</li><li>Une condition suffisante est 3⁻ⁿ|u₀−1|&lt;ε. Si u₀=1, l'erreur est toujours nulle ; sinon, on peut choisir n assez grand pour que 3ⁿ&gt;|u₀−1|/ε.</li></ol>`
 }
+];
 
-function renderChapters() {
-  document.getElementById("chapters").innerHTML = chapters.map(c =>
-    `<button type="button" class="chapter ${c.id === currentChapter ? "active" : ""}"
-      data-id="${c.id}" aria-current="${c.id === currentChapter ? "page" : "false"}">
-      ${c.name}<small>${c.status}</small>
-    </button>`
-  ).join("");
-  document.querySelectorAll(".chapter").forEach(button => {
-    button.addEventListener("click", () => {
-      currentChapter = button.dataset.id;
-      currentTab = "cours";
-      render();
-    });
-  });
+const sources=[
+["Exo7 — cours de première année","https://exo7.emath.fr/un.html","Cours, ensembles, dénombrement, réels, suites."],
+["Exo7 — Ensembles et applications (PDF)","https://exo7.emath.fr/cours/ch_ensembles.pdf","Ensembles, relations, applications, dénombrement."],
+["Exo7 — Les suites (PDF)","https://exo7.emath.fr/cours/ch_suites.pdf","Définitions, opérations, comparaison, limites."],
+["Unisciel — corps et ensembles de nombres","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch01/co/apprendre_ch1_01.html","Définition d'un corps et exemples."],
+["Unisciel — relation d'ordre","https://uel.unisciel.fr/mathematiques/logique1/logique1_ch06/co/apprendre_ch6_03.html","Ordres, majorants et bornes."],
+["Unisciel — corps ordonné des réels","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch01/co/apprendre_ch1_01_01.html","Compatibilité de l'ordre et des opérations."],
+["Unisciel — borne supérieure","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch01/co/apprendre_ch1_01_03.html","Complétude de ℝ, bornes et exemples."],
+["Unisciel — valeur absolue","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch01/co/apprendre_ch1_01_04.html","Définition et inégalité triangulaire."],
+["Unisciel — suites de référence","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch02/co/apprendre_ch2_05_01.html","Suites géométriques et sommes."],
+["Unisciel — suites monotones","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch02/co/apprendre_ch2_06_01.html","Théorème de convergence monotone."],
+["Unisciel — suites adjacentes","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch02/co/apprendre_ch2_06_02.html","Adjacence et encadrement."],
+
+
+$$
+"Unisciel — critère de Cauchy","https://uel.unisciel.fr/mathematiques/analyse1/analyse1_ch02/co/apprendre_ch2_08_02.html","Complétude des suites réelles."
+$$
+
+
+];
+
+const pages=document.getElementById("pages"),nav=document.getElementById("nav");
+const escapeHTML=s=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+const labelFor=id=>chapters.find(c=>c.id===id)?.title||id;
+function details(head,body){return `<details><summary>${head}</summary><div class="answer">${body}</div></details>`}
+function navButton(id,text){
+ const b=document.createElement("button");b.type="button";b.textContent=text;b.dataset.go=id;
+ b.addEventListener("click",()=>go(id));nav.append(b)
 }
+function label(text){const p=document.createElement("p");p.className="group-label";p.textContent=text;nav.append(p)}
+label("Navigation");navButton("accueil","⌂  Accueil");
+label("Cours séparés");chapters.forEach(c=>navButton(c.id,c.icon+"  "+c.title));
+label("Entraînement");navButton("questions","?  Questions de cours");
+navButton("colles","◆  32 khôlles corrigées");navButton("ds","✎  12 DS corrigés");
+navButton("sources","↗  Sources et périmètre");
 
-function renderTabs() {
-  document.getElementById("tabs").innerHTML = tabNames.map(([id, label]) =>
-    `<button type="button" class="tab ${id === currentTab ? "active" : ""}"
-       data-tab="${id}" aria-pressed="${id === currentTab}">${label}</button>`
-  ).join("");
-  document.querySelectorAll(".tab").forEach(button => {
-    button.addEventListener("click", () => {
-      currentTab = button.dataset.tab;
-      renderTabs();
-      renderBody();
-    });
-  });
+function page(id,html){const s=document.createElement("section");s.id=id;s.className="page";s.innerHTML=html;pages.append(s)}
+page("accueil",`
+<h2>Choisis un vrai chapitre</h2>
+<p class="lead">Chaque onglet correspond à un cours indépendant. Les chapitres suivent la progression : fondements → dénombrement et structures → ordre et réels → suites et convergence.</p>
+<div class="grid">${chapters.map(c=>`<div class="card"><span class="pill">Chapitre ${c.icon}</span><h3>${escapeHTML(c.title)}</h3><p>${escapeHTML(c.subtitle)}</p><button class="action" type="button" data-open="${c.id}">Ouvrir le chapitre</button></div>`).join("")}</div>
+<div class="box good"><strong>Entraînement :</strong> ${questions.length} questions de cours, ${colles.length} khôlles et ${ds.length} DS. Les sujets sont originaux, classés par thème et difficulté ; chaque correction peut être ouverte séparément.</div>
+<div class="box warn"><strong>Transparence :</strong> ce cours reprend les thèmes que tu as mentionnés ou qui ont été identifiés dans notre échange, dont les corps et les relations d'ordre. Je ne peux pas certifier une exploitation ligne à ligne de photos dont le texte exact n'est plus accessible ici.</div>`);
+
+chapters.forEach(c=>{
+ const index=`<div class="chapter-index"><strong>Dans ce chapitre :</strong><br>${c.blocks.map((b,i)=>`<a href="#${c.id}-${i}" data-anchor="${c.id}-${i}">${escapeHTML(b[0])}</a>`).join("")}</div>`;
+ const blocks=c.blocks.map((b,i)=>`<article class="subtopic" id="${c.id}-${i}"><h3>${escapeHTML(b[0])}</h3>${b[1]}</article>`).join("");
+ page(c.id,`<h2>${escapeHTML(c.title)}</h2><p class="lead">${escapeHTML(c.subtitle)}</p>${index}${blocks}<div class="box good"><strong>Après le cours :</strong> <button type="button" class="action" data-practice="colles" data-chapter="${c.id}">Khôlles de ce chapitre</button> <button type="button" class="action" data-practice="ds" data-chapter="${c.id}">DS de ce chapitre</button></div>`)
+});
+page("questions",`<h2>${questions.length} questions de cours</h2><p class="lead">Réponds d'abord à voix haute, puis ouvre la correction. Chaque question est rattachée à un chapitre précis.</p>
+<div class="toolbar"><input id="q-search" type="search" placeholder="Rechercher une notion…" aria-label="Rechercher une question"><select id="q-filter" class="action" aria-label="Filtrer par chapitre"><option value="all">Tous les chapitres</option>${chapters.map(c=>`<option value="${c.id}">${escapeHTML(c.title)}</option>`).join("")}</select></div>
+<p id="q-count" class="muted" aria-live="polite"></p><div id="q-list">${questions.map((q,i)=>`<article class="exercise" data-cat="${q[0]}"><span class="pill">${escapeHTML(labelFor(q[0]))} · Q${i+1}</span>${details(escapeHTML(q[1]),`<p>${escapeHTML(q[2])}</p>`)}</article>`).join("")}</div>`);
+function makeBank(id,title,items){
+ page(id,`<h2>${title}</h2><p class="lead">Chaque sujet est corrigé juste en dessous. Pour travailler réellement : ferme la correction, rédige sur papier, puis compare ligne à ligne.</p>
+ <div class="toolbar"><input id="${id}-search" type="search" placeholder="Rechercher dans les sujets…" aria-label="Rechercher un sujet"><select id="${id}-filter" class="action" aria-label="Filtrer par chapitre"><option value="all">Tous les chapitres</option>${chapters.map(c=>`<option value="${c.id}">${escapeHTML(c.title)}</option>`).join("")}</select><select id="${id}-level" class="action" aria-label="Filtrer par niveau"><option value="all">Tous niveaux</option><option value="1">★</option><option value="2">★★</option><option value="3">★★★</option></select></div>
+ <p id="${id}-count" class="muted" aria-live="polite"></p><div id="${id}-list">${items.map((v,i)=>`<article class="exercise" data-cat="${v.c}" data-level="${v.level}"><span class="pill">${id==="colles"?"Khôlle":"DS"} ${String(i+1).padStart(2,"0")}</span><span class="pill">${escapeHTML(labelFor(v.c))}</span><span class="pill ${v.level===3?"hard":""}">${"★".repeat(v.level)}</span><h3>${escapeHTML(v.title)}</h3><div>${v.q}</div>${details("Afficher le corrigé détaillé",v.a)}</article>`).join("")}</div>`);
 }
+makeBank("colles",`${colles.length} sujets de khôlle corrigés`,colles);
+makeBank("ds",`${ds.length} DS thématiques corrigés`,ds);
+page("sources",`<h2>Sources et périmètre</h2>
+<p>Les exercices et corrigés de ce fichier sont des créations pour l'entraînement : ils ne sont pas présentés comme des sujets officiels. Les références suivantes servent à vérifier et approfondir le contenu mathématique du cours.</p>
+<ul>${sources.map(x=>`<li><a href="${escapeHTML(x[1])}" target="_blank" rel="noopener noreferrer">${escapeHTML(x[0])}</a> — ${escapeHTML(x[2])}</li>`).join("")}</ul>
+<div class="box warn"><strong>Limite explicite :</strong> je n'ai pas reconstitué de blancs illisibles et je ne peux pas garantir ici que chaque ligne des photos initiales figure dans ce fichier. Il s'agit d'un cours organisé à partir des thèmes identifiés, complété avec des références de première année.</div>`);
 
-function renderBody() {
-  const area = document.getElementById("body");
-  if (currentChapter !== "ensembles") {
-    area.innerHTML = `
-      <span class="badge warn">En attente de tes feuilles</span>
-      <h3>${chapters.find(c => c.id === currentChapter).name}</h3>
-      <p>Ce module figure dans le parcours repéré sur tes sommaires,
-      mais il n'est pas encore rédigé dans cette première version.
-      Je préfère ne pas inventer les démonstrations ou les sujets
-      de ton professeur.</p>
-      <div class="callout">
-        <strong>Prochaine mise à jour :</strong> envoie les pages de ce
-        chapitre dans notre conversation. Je pourrai rédiger le cours,
-        les définitions, les preuves et les exercices ici, puis te donner
-        une version mise à jour du site.
-      </div>`;
-    return;
-  }
-  if (currentTab === "cartes") {
-    renderCard();
-    return;
-  }
-  area.innerHTML = content.ensembles[currentTab] || "<p>Contenu à venir.</p>";
+document.querySelectorAll("[data-open]").forEach(x=>x.addEventListener("click",()=>go(x.dataset.open)));
+document.querySelectorAll("[data-practice]").forEach(x=>x.addEventListener("click",()=>{
+ go(x.dataset.practice);
+ document.getElementById(x.dataset.practice+"-filter").value=x.dataset.chapter;
+ refresh(x.dataset.practice)
+}));
+document.querySelectorAll("[data-anchor]").forEach(x=>x.addEventListener("click",e=>{
+ e.preventDefault();document.getElementById(x.dataset.anchor)?.scrollIntoView({behavior:"smooth"})
+}));
+function norm(v){return v.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
+function refresh(type){
+ const items=[...document.querySelectorAll(`#${type}-list>.exercise`)];
+ const text=norm(document.getElementById(type+"-search").value.trim());
+ const cat=document.getElementById(type+"-filter").value;
+ const lvl=type==="q"?"all":document.getElementById(type+"-level").value;
+ let shown=0;
+ items.forEach(item=>{
+   const ok=(cat==="all"||item.dataset.cat===cat)&&(lvl==="all"||item.dataset.level===lvl)&&norm(item.textContent).includes(text);
+   item.hidden=!ok;if(ok)shown++
+ });
+ document.getElementById(type+"-count").textContent=`${shown} sujet${shown>1?"s":""} affiché${shown>1?"s":""} sur ${items.length}.`
 }
-
-function renderCard() {
-  const area = document.getElementById("body");
-  const card = cards[cardIndex];
-  area.innerHTML = `
-    <h3>S'entraîner par rappel actif</h3>
-    <p>Essaie de répondre <strong>avant</strong> de retourner la carte.</p>
-    <div class="progress">Carte ${cardIndex + 1} sur ${cards.length}
-      · ${needsReview.size} à revoir</div>
-    <div class="flashcard">
-      <div class="overline">${cardRevealed ? "Réponse" : "Question"}</div>
-      <div class="face" id="face"></div>
-    </div>
-    <div class="flash-controls">
-      <button class="action" id="flip" type="button">
-        ${cardRevealed ? "Revoir la question" : "Afficher la réponse"}
-      </button>
-      <button class="action secondary" id="again" type="button">
-        À revoir
-      </button>
-      <button class="action secondary" id="known" type="button">
-        Je la connais
-      </button>
-      <button class="action secondary" id="next" type="button">
-        Carte suivante →
-      </button>
-    </div>
-    <div class="callout green">Ton choix « À revoir » ou « Je la connais »
-    est enregistré dans ce navigateur. Il ne se synchronise pas
-    automatiquement avec d'autres appareils.</div>`;
-  document.getElementById("face").textContent = card[cardRevealed ? 1 : 0];
-  document.getElementById("flip").onclick = () => {
-    cardRevealed = !cardRevealed;
-    renderCard();
-  };
-  document.getElementById("again").onclick = () => {
-    needsReview.add(cardIndex);
-    saveReview();
-    nextCard();
-  };
-  document.getElementById("known").onclick = () => {
-    needsReview.delete(cardIndex);
-    saveReview();
-    nextCard();
-  };
-  document.getElementById("next").onclick = nextCard;
+["q","colles","ds"].forEach(type=>{
+ ["search","filter",...(type==="q"?[]:["level"])].forEach(field=>{
+  const node=document.getElementById(type+"-"+field);
+  node.addEventListener(field==="search"?"input":"change",()=>refresh(type))
+ });
+ refresh(type)
+});
+function go(id,hash=true){
+ if(!document.getElementById(id)?.classList.contains("page"))id="accueil";
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll("nav button").forEach(b=>b.dataset.go===id?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+ const c=chapters.find(x=>x.id===id);
+ document.getElementById("hero-title").textContent=c?c.title:id==="accueil"?"Un chapitre à la fois.":id==="questions"?"Savoir son cours.":id==="colles"?"Chercher, expliquer, démontrer.":id==="ds"?"Rédiger comme en DS.":"Sources vérifiables.";
+ document.getElementById("hero-subtitle").textContent=c?c.subtitle:id==="accueil"?"Des chapitres séparés, des démonstrations, 32 khôlles et 12 DS corrigés.":id==="sources"?"Références de cours et limites clairement indiquées.":"Des sujets classés par chapitre et des corrigés à dévoiler.";
+ if(hash)history.replaceState(null,"","#"+id);
+ window.scrollTo(0,0);
 }
-
-function nextCard() {
-  cardIndex = (cardIndex + 1) % cards.length;
-  cardRevealed = false;
-  renderCard();
-}
-
-function toggleSolution(button) {
-  const solution = button.nextElementSibling;
-  solution.hidden = !solution.hidden;
-  button.textContent = solution.hidden ? "Voir le corrigé" : "Masquer le corrigé";
-}
-
-function render() {
-  const chapter = chapters.find(c => c.id === currentChapter);
-  document.getElementById("chapter-title").textContent = chapter.name;
-  document.getElementById("chapter-subtitle").textContent = chapter.detail;
-  renderChapters();
-  renderTabs();
-  renderBody();
-}
-
-saveReview();
-render();
+window.addEventListener("hashchange",()=>go(location.hash.slice(1),false));
+go(location.hash.slice(1)||"accueil",false);
 </script>
 </body>
 </html>
